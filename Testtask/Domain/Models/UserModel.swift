@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct UserModel: Hashable {
+    let name: String
+    let role: String
+    let email: String
+    let phoneNumber: String
+}

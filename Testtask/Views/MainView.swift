@@ -7,15 +7,26 @@
 
 import SwiftUI
 
+enum TabSelection {
+    case users
+    case signUp
+}
+
 struct MainView: View {
+    @State var tabSelection: TabSelection = .users
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView(selection: $tabSelection) {
+            // Users View
+            UsersView()
+                .tag(TabSelection.users)
+                .tabItem { Label("Users", systemImage: "person.3.sequence.fill") }
+            // SignUpView
+            SingnUpView()
+                .tag(TabSelection.signUp)
+                .tabItem { Label("Sign Up", systemImage: "person.crop.circle.fill.badge.plus") }
         }
-        .padding()
+        .tint(.appCyan)
     }
 }
 

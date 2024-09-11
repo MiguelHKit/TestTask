@@ -8,11 +8,39 @@
 import SwiftUI
 
 struct UsersView: View {
+    @State private var data: [UserModel] = []
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 0) {
+            HStack {
+                Text("Working with GET request")
+            }
+            .background(.appYellow)
+            self.listView
+        }
+    }
+    
+    @ViewBuilder
+    var listView: some View {
+        if data.isEmpty {
+            Text("No data")
+        } else {
+            List(self.data, id: \.self) { item in
+                self.rowView(item: item)
+            }
+        }
+    }
+    @ViewBuilder
+    func rowView(item: UserModel) -> some View {
+        VStack {
+            Text("Name")
+            Text("Role")
+            Text("E-mail")
+            Text("Phone number")
+        }
     }
 }
 
 #Preview {
-    UsersView()
+    MainView(tabSelection: .users)
 }

@@ -7,9 +7,19 @@
 
 import SwiftUI
 
+struct FieldView: View {
+    var body: some View {
+        HStack(content: {
+            
+        })
+    }
+}
+
 struct SingnUpView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            TextField("Name", text: .constant("dsds"))
+        }
     }
 }
 
