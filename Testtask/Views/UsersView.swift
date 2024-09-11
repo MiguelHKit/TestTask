@@ -13,9 +13,13 @@ struct UsersView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
+                Spacer()
                 Text("Working with GET request")
+                Spacer()
             }
+            .padding(.vertical)
             .background(.appYellow)
+            .clipped()
             self.listView
         }
     }
@@ -23,7 +27,11 @@ struct UsersView: View {
     @ViewBuilder
     var listView: some View {
         if data.isEmpty {
-            Text("No data")
+            AdviceView(
+                image: .noUsers,
+                title: "There are no user yet",
+                button: nil
+            )
         } else {
             List(self.data, id: \.self) { item in
                 self.rowView(item: item)
