@@ -7,72 +7,94 @@
 
 import SwiftUI
 
-struct GrayBorderedTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(.horizontal,15)
-            .padding(.vertical,20)
-            .cornerRadius(10)
-            .overlay(
-                .gray,
-                in: RoundedRectangle(
-                    cornerRadius: 10
-                ).stroke(lineWidth: 1)
-            )
-    }
-}
-
-struct RedBorderedTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(.horizontal,15)
-            .padding(.vertical,20)
-            .cornerRadius(10)
-            .overlay(
-                .red,
-                in: RoundedRectangle(
-                    cornerRadius: 10
-                ).stroke(lineWidth: 1)
-            )
-    }
-}
-
-extension TextFieldStyle where Self == GrayBorderedTextFieldStyle {
-    static var grayBordered: Self { Self() }
-}
-
-extension TextFieldStyle where Self == RedBorderedTextFieldStyle {
-    static var redBordered: Self { Self() }
-}
-
 class SingnUpViewModel: ObservableObject {
     @Published var name: String = ""
+    @Published var nameErrorMsj: String? = nil
     @Published var email: String = ""
+    @Published var emailErrorMsj: String? = nil
     @Published var phone: String = ""
+    @Published var phoneErrorMsj: String? = nil
+    @Published var positionSelection: String = ""
+    @Published var positionOptions: [String] = [
+        "Frontend developer",
+        "Backend developer",
+        "Designer developer",
+        "QA",
+    ]
+    @Published var imageName: String = ""
+    @Published var imageNameErrorMsj: String? = nil
 }
 
 struct SingnUpView: View {
     @StateObject var vm: SingnUpViewModel = .init()
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                TextField("Your Name", text: .constant(""))
-                    .textFieldStyle(.grayBordered)
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Text("Working with GET request")
+                    .font(.title2)
+                Spacer()
+            }
+            .padding(.vertical)
+            .background(.appYellow)
+            .clipped()
+            //
+            ScrollView {
+                VStack(spacing: 30,
+                       content: {
+                    self.rowTextField(
+                        placeholder: "Your Name",
+                        value: $vm.name,
+                        errorMsg: vm.nameErrorMsj
+                    )
+                    self.rowTextField(
+                        placeholder: "Email",
+                        value: $vm.email,
+                        errorMsg: vm.emailErrorMsj
+                    )
+                    self.rowTextField(
+                        placeholder: "Phone",
+                        value: $vm.phone,
+                        errorMsg: vm.phoneErrorMsj
+                    )
+                    //
+                    RadioSingleSelectionView(
+                        selectedItem: $vm.positionSelection,
+                        items: vm.positionOptions,
+                        titleLabel: "Select your position"
+                    )
+                    //
+                    self.rowTextField(
+                        placeholder: "Upload your photo",
+                        value: $vm.imageName,
+                        errorMsg: vm.imageNameErrorMsj
+                    )
+                    .overlay(alignment: .trailing) {
+                        Button("Upload") {
+                            
+                        }
+                        .foregroundStyle(.appCyan)
+                        .padding(.trailing)
+                    }
+                })
+                .padding()
+            }
+        }
+    }
+    @ViewBuilder
+    func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?) -> some View {
+        VStack(spacing: 10) {
+            TextField(placeholder, text: value)
+                .textFieldStyle(errorMsg == nil ? .grayBordered : .redBordered )
+            if let errorMsg {
                 HStack {
-                    Text("Validation Message")
+                    Text(errorMsg)
                     Spacer()
                 }
                 .font(.subheadline)
                 .padding(.leading, 20)
                 .foregroundStyle(.red)
-            }
-        }
-        .padding()
-        VStack {
-            Text("Select your position")
-            HStack {
-                
             }
         }
     }

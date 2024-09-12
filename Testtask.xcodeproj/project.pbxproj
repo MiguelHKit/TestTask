@@ -16,6 +16,7 @@
 		84171B042C92440300089B06 /* AppYellowButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B032C92440300089B06 /* AppYellowButtonStyle.swift */; };
 		84171B0A2C92885B00089B06 /* RadioSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B092C92885B00089B06 /* RadioSelectionView.swift */; };
 		84171B0C2C92902800089B06 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B0B2C92902800089B06 /* Collection.swift */; };
+		84171B0E2C92A68700089B06 /* BorderedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B0D2C92A68700089B06 /* BorderedTextFieldStyle.swift */; };
 		84AB9C762C911A1D00CDE749 /* TesttaskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AB9C752C911A1D00CDE749 /* TesttaskApp.swift */; };
 		84AB9C782C911A1D00CDE749 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AB9C772C911A1D00CDE749 /* MainView.swift */; };
 		84AB9C7A2C911A1E00CDE749 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84AB9C792C911A1E00CDE749 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 		84171B032C92440300089B06 /* AppYellowButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppYellowButtonStyle.swift; sourceTree = "<group>"; };
 		84171B092C92885B00089B06 /* RadioSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSelectionView.swift; sourceTree = "<group>"; };
 		84171B0B2C92902800089B06 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		84171B0D2C92A68700089B06 /* BorderedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextFieldStyle.swift; sourceTree = "<group>"; };
 		84AB9C722C911A1D00CDE749 /* Testtask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Testtask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84AB9C752C911A1D00CDE749 /* TesttaskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesttaskApp.swift; sourceTree = "<group>"; };
 		84AB9C772C911A1D00CDE749 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				84171B032C92440300089B06 /* AppYellowButtonStyle.swift */,
+				84171B0D2C92A68700089B06 /* BorderedTextFieldStyle.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			files = (
 				84171AF42C9221E400089B06 /* UsersView.swift in Sources */,
 				84171B0C2C92902800089B06 /* Collection.swift in Sources */,
+				84171B0E2C92A68700089B06 /* BorderedTextFieldStyle.swift in Sources */,
 				84171B0A2C92885B00089B06 /* RadioSelectionView.swift in Sources */,
 				84171AFB2C92269A00089B06 /* UserModel.swift in Sources */,
 				84171AF02C92204300089B06 /* NoConnectionView.swift in Sources */,

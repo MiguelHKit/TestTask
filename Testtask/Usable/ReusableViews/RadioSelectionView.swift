@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RadioButton: View {
+fileprivate struct RadioButton: View {
     let id: Int
     @Binding var selectedId: Int
     var tint: Color
