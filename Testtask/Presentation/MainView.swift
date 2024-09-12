@@ -22,7 +22,7 @@ struct MainView: View {
                 .tag(TabSelection.users)
                 .tabItem { Label("Users", systemImage: "person.3.sequence.fill") }
             // SignUpView
-            SingnUpView()
+            SignUpView()
                 .tag(TabSelection.signUp)
                 .tabItem { Label("Sign Up", systemImage: "person.crop.circle.fill.badge.plus") }
         }

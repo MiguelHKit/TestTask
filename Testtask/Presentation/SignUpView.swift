@@ -7,7 +7,12 @@
 
 import SwiftUI
 
-class SingnUpViewModel: ObservableObject {
+enum SingUpResult {
+    case success
+    case emailAlreadyRegistered
+}
+
+class SignUpViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var nameErrorMsj: String? = nil
     @Published var email: String = ""
@@ -23,10 +28,17 @@ class SingnUpViewModel: ObservableObject {
     ]
     @Published var imageName: String = ""
     @Published var imageNameErrorMsj: String? = nil
+    
+    func signUp(onSuccessViewAction: () -> Void) {
+        onSuccessViewAction()
+    }
 }
 
-struct SingnUpView: View {
-    @StateObject var vm: SingnUpViewModel = .init()
+struct SignUpView: View {
+    @StateObject var vm: SignUpViewModel = .init()
+    //
+    @State private var showSuccessSignedUpModal: Bool = false
+    @Environment(\.dismiss) var dissmissModal
     
     var body: some View {
         VStack(spacing: 0) {
@@ -79,8 +91,37 @@ struct SingnUpView: View {
                     }
                 })
                 .padding()
+                //Button
+                Button("Sign up") {
+                    vm.signUp(onSuccessViewAction: {
+                        self.showSuccessSignedUpModal = true
+                    })
+                }
+                .buttonStyle(.appYellowButtonStyle)
             }
         }
+        .fullScreenCover(isPresented: self.$showSuccessSignedUpModal,
+               content: {
+            AdviceView(
+                image: .successRegistered,
+                title: "User succefully registered",
+                button: .init(
+                    buttonTitle: "Got it",
+                    action: {
+                        
+                    }
+                )
+            )
+            .overlay(alignment: .topTrailing) {
+                Button("", systemImage: "xmark") {
+                    showSuccessSignedUpModal = false
+                }
+                .foregroundStyle(.foreground)
+                .opacity(0.8)
+                .font(.title)
+                .padding(.trailing)
+            }
+        })
     }
     @ViewBuilder
     func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?) -> some View {
@@ -101,5 +142,5 @@ struct SingnUpView: View {
 }
 
 #Preview {
-    SingnUpView()
+    SignUpView()
 }
