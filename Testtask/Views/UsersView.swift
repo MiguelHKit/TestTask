@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UsersView: View {
-    @State private var data: [UserModel] = .examples
+    @State private var data: [UserModel] = []
     
     var body: some View {
         VStack(spacing: 0) {
