@@ -8,11 +8,21 @@
 import SwiftUI
 
 enum SingUpResult {
+    case generalError
     case success
     case emailAlreadyRegistered
 }
+import Combine
 
+enum SignUpField: CaseIterable {
+    case name
+    case email
+    case phone
+}
+
+@MainActor
 class SignUpViewModel: ObservableObject {
+    @Published var fields: [SignUpField] = SignUpField.allCases
     @Published var name: String = ""
     @Published var nameErrorMsj: String? = nil
     @Published var email: String = ""
@@ -26,11 +36,29 @@ class SignUpViewModel: ObservableObject {
         "Designer developer",
         "QA",
     ]
-    @Published var imageName: String = ""
-    @Published var imageNameErrorMsj: String? = nil
+    @Published var photoName: String = ""
+    @Published var photoNameErrorMsj: String? = nil
+    //
+    @Published var isSending: Bool = false
+    private var cancellables = Set<AnyCancellable>()
     
-    func signUp(onSuccessViewAction: () -> Void) {
-        onSuccessViewAction()
+    func validateName(_ name: String) -> String? {
+        return name.isEmpty ? "Name cannot be empty" : nil
+    }
+    func validateUser() {
+        self.nameErrorMsj = validateName(self.name)
+    }
+    func submit() async {
+        self.validateUser()
+        guard
+            nameErrorMsj == nil
+        else { return }
+        do {
+            self.isSending = true
+        } catch {
+            self.isSending = false
+        }
+        self.isSending = false
     }
 }
 
@@ -79,8 +107,8 @@ struct SignUpView: View {
                     //
                     self.rowTextField(
                         placeholder: "Upload your photo",
-                        value: $vm.imageName,
-                        errorMsg: vm.imageNameErrorMsj
+                        value: $vm.photoName,
+                        errorMsg: vm.photoNameErrorMsj
                     )
                     .overlay(alignment: .trailing) {
                         Button("Upload") {
@@ -93,9 +121,9 @@ struct SignUpView: View {
                 .padding()
                 //Button
                 Button("Sign up") {
-                    vm.signUp(onSuccessViewAction: {
-                        self.showSuccessSignedUpModal = true
-                    })
+                    Task {
+                        await vm.submit()                        
+                    }
                 }
                 .buttonStyle(.appYellowButtonStyle)
             }
