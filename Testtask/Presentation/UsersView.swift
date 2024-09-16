@@ -7,8 +7,41 @@
 
 import SwiftUI
 
+@MainActor
+class UsersViewModel: ObservableObject {
+    @Published var data: [UserModel] = []
+    var userServices: UserServices = .init()
+    
+    @Sendable
+    func onAppearTask() async {
+        await self.getUsers()
+    }
+    func getUsers() async {
+        do {
+            // call to network
+            guard
+                let response = try await self.userServices.getUsers(
+                    page: 2,
+                    count: 10
+                ),
+                response.success == true //bcs of optional
+            else { throw NetworkError.dataError }
+            self.data = response.users.compactMap { $0 }.map {
+                UserModel(
+                    name: $0.name.unwrap(),
+                    role: $0.position.unwrap(),
+                    email: $0.email.unwrap(),
+                    phoneNumber: $0.phone.unwrap()
+                )
+            }
+        } catch {
+            print("getUsers: \(error)")
+        }
+    }
+}
+
 struct UsersView: View {
-    @State private var data: [UserModel] = []
+    @StateObject var vm: UsersViewModel = .init()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,18 +56,19 @@ struct UsersView: View {
             .clipped()
             self.listView
         }
+        .task(vm.onAppearTask)
     }
     
     @ViewBuilder
     var listView: some View {
-        if data.isEmpty {
+        if vm.data.isEmpty {
             AdviceView(
                 image: .noUsers,
                 title: "There are no user yet",
                 button: nil
             )
         } else {
-            List(self.data, id: \.self) { item in
+            List(vm.data, id: \.self) { item in
                 self.rowView(item: item)
             }
             .listStyle(.plain)
@@ -57,6 +91,7 @@ struct UsersView: View {
                         .opacity(0.6)
                         .padding(.bottom, 5)
                     Text(item.email)
+                        .lineLimit(1)
                     Text(item.phoneNumber)
                 }
                 .font(.subheadline)

@@ -14,4 +14,14 @@ extension Collection {
     var isNotEmpty: Bool {
         return !self.isEmpty
     }
+//    func removeOptionals() -> [Element] {
+//        self.compactMap { $0 }
+//    }
+}
+
+extension Array where Element: ExpressibleByNilLiteral {
+    // Función que elimina los valores nil
+    func removeOptionals() -> [Element] {
+        return self.compactMap { $0 }
+    }
 }

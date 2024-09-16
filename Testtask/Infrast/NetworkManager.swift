@@ -9,7 +9,7 @@ import Foundation
 
 enum NetworkError: Error {
     case badResponse
-    case invalidURLPath
+    case invalidURL
     case invalidResponse
     case urlDoesntExist
     case encodingBodyError
@@ -17,6 +17,7 @@ enum NetworkError: Error {
     case dataError
     case invalidParameters
     case authorizationError
+    case URLPathHasNoSlash
 //    case noModelDefined
 }
 
@@ -28,21 +29,11 @@ public typealias Parameters = [String: Any]
 public typealias FormDataParameters = [String: ValidFormDataTypes]
 public protocol ValidFormDataTypes {}
 
-struct NetworkParameter {
-    let name: String
-    let value: String
-    let on: Self.parameterType
-    enum parameterType {
-        case query
-        case requestBody
-    }
-}
-
 struct NetworkRequest {
     let url: NetworkURL
-    let method: Self.NetworkHTTPMethod
-    var params: [NetworkParameter] = []
-    var authorization: Self.NetworkHTTPAutorization = .none
+    let method: Self.NetworkMethod
+    var params: [Self.NetworkParameter] = []
+    var authorization: Self.NetworkAutorization = .none
     var headers: [NetworkHTTPHeader] = []
     var body: Self.NetworkHTTPBody = .none
     //MARK: - URL
@@ -56,15 +47,15 @@ struct NetworkRequest {
         let version: Self.Version
         let path: String
         
-        func getComponents() -> URLComponents {
-            var components = URLComponents()
-            components.host = baseURL
-            components.path = "\(version.rawValue)/\(path)"
+        func getComponents() -> URLComponents? {
+            var components = URLComponents(string: baseURL)
+            let previousPath = components?.path ?? ""
+            components?.path = previousPath + "/\(version.rawValue)/\(path)"
             return components
         }
     }
     //MARK: - Method
-    enum NetworkHTTPMethod: String, Hashable, CaseIterable, NetworkEnumProtocol {
+    enum NetworkMethod: String, Hashable, CaseIterable, NetworkEnumProtocol {
         case get
         case post
         case put
@@ -88,52 +79,21 @@ struct NetworkRequest {
             self.stringValue
         }
     }
-    //MARK: - Authorization
-    enum NetworkHTTPAutorizationSelectable: Hashable, CaseIterable, NetworkEnumProtocol {
-        case none
-        case apiKey
-        case bearerToken
-        case jwtBearerToken
-        case basicAuth
-        case degestAuth
-        case OAuth1
-        case OAuth2
-        case hawkAuth
-        case awsSignature
-        
-        func getTitle() -> String {
-            switch self {
-            case .none: "none"
-            case .apiKey: "API Key"
-            case .bearerToken: "bearerToken"
-            case .jwtBearerToken: "jwtBearerToken"
-            case .basicAuth: "Basic Auth"
-            case .degestAuth: "degestAuth"
-            case .OAuth1: "OAuth1"
-            case .OAuth2: "OAuth2"
-            case .hawkAuth: "hawkAuth"
-            case .awsSignature: "awsSignature"
-            }
+    //MARK: - Parameters
+    struct NetworkParameter {
+        let name: String
+        let value: String
+        let on: Self.parameterType
+        enum parameterType {
+            case query
+            case requestBody
         }
     }
-    struct NetworkHTTPAutorizationValues: Hashable {
-        var none: String = ""
-        var apiKey_Key: String = ""
-        var apiKey_Value: String = ""
-        var apiKey_AddTo: NetworkHTTPAutorization.AddTo = .header
-        var bearerToken: String = ""
-        var jwtBearerToken: String = ""
-        var basicAuth: String = ""
-        var degestAuth: String = ""
-        var OAuth1: String = ""
-        var OAuth2: String = ""
-        var hawkAuth: String = ""
-        var awsSignature: String = ""
-    }
-    enum NetworkHTTPAutorization {
+    //MARK: - Authorization
+    enum NetworkAutorization {
         case none
         case apiKey(key: String, value: String)
-        case apiKey(key: String, value: String, addTo: Self.AddTo)
+        case apiKeyAddTo(key: String, value: String, addTo: Self.AddTo)
         case bearerToken(token: String)
 //        case jwtBearerToken(algorithm: JWTAlgorithm, secret: String, payload: String) //soon
 //        case jwtBearerToken(algorithm: JWTAlgorithm, secret: String, payload: String, addTo: Self.AddTo) //soon
@@ -144,17 +104,25 @@ struct NetworkRequest {
         case hawkAuth(authId: String, authKey: String, algorihm: Self.Algorithm)
         case awsSignature(accessKey: String, secretKey: String)
         
-        enum AddTo: Hashable, CaseIterable, NetworkEnumProtocol {
+        func getTitle() -> String {
+            switch self {
+            case .none: "none"
+            case .apiKey: "API Key"
+            case .apiKeyAddTo: "API Key"
+            case .bearerToken: "bearerToken"
+//            case .jwtBearerToken: "jwtBearerToken"
+            case .basicAuth: "Basic Auth"
+//            case .degestAuth: "degestAuth"
+            case .OAuth1: "OAuth1"
+//            case .OAuth2: "OAuth2"
+            case .hawkAuth: "hawkAuth"
+            case .awsSignature: "awsSignature"
+            }
+        }
+        
+        enum AddTo {
             case header
             case queryParams
-            
-            var allCases: [AddTo] { Self.allCases }
-            func getTitle() -> String {
-                switch self {
-                case .header: "Header"
-                case .queryParams: "query Params"
-                }
-            }
         }
         
         enum Algorithm {
@@ -171,17 +139,6 @@ struct NetworkRequest {
             case HS256
             case HS384
         }
-        static func getAllCases() -> [String] {
-            [
-                "none",
-                "API Key",
-                "Bearer Token",
-                "Basic Auth",
-                "OAuth1",
-                "nawk Auth",
-                "awsSignature"
-            ]
-        }
     }
     //MARK: - Body
     enum NetworkHTTPBody {
@@ -195,7 +152,7 @@ struct NetworkRequest {
         func encodedAsData() throws -> Data? {
             switch self {
             case .none:
-                return Data()
+                return nil
             case .raw(let params):
                 do {
                     let jsonData = try JSONSerialization.data(withJSONObject: params)
@@ -218,7 +175,6 @@ struct NetworkRequest {
                     }
                 }
                 return Data()
-//                return Data()
             case .x_www_form_urlencoded:
                 return Data()
             case .binary:
@@ -275,7 +231,7 @@ struct NetworkResponse {
 
 final class NetworkManager {
     private static let instance = NetworkManager()
-    public var printLogs: Bool = false
+    public var printLogs: Bool = true
     //GENERAL CONFIGURATION
     static let IS_PRODUCTION: Bool = false
     static let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
@@ -283,16 +239,19 @@ final class NetworkManager {
     
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
         //URL
-        let urlCalculation: URL? = {
+        let url: URL = try {
             var components = req.url.getComponents()
-            guard req.params.isNotEmpty else { return components.url }
-            components.queryItems = req.params.map({ (key: String, value: String) in
-                URLQueryItem(name: key, value: value)
-            })
-            return components.url
+            guard components?.path.first == "/" else { throw NetworkError.URLPathHasNoSlash  }
+            let queryItems = req.params
+                .filter{ $0.on == .query }
+                .map{
+                    URLQueryItem(name: $0.name, value: $0.value)
+                }
+//            let authQueryItems =
+            components?.queryItems = queryItems
+            guard let finalUrl: URL = components?.url else { throw NetworkError.invalidURL }
+            return finalUrl
         }()
-        //
-        guard let url: URL = urlCalculation else { throw NetworkError.invalidURLPath }
         //
         var request = URLRequest(url: url)
         //Add Method
@@ -307,27 +266,27 @@ final class NetworkManager {
         let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         // MAKING THE RESQUEST
-        let (data, response) = try await session.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse else {
+        let (data, rawResponse) = try await session.data(for: request)
+        guard let response = rawResponse as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }
         //Printing Values
-//        🛸[Request]: \(request.urlRequest?.debugDescription ?? "")
         let responseDescription = """
             ⚔️[Method]: \(request.httpMethod ?? "UNKNOWN")
+            ⚔️[Status]: \(response.statusCode)
             📡[URL]: \(request.url?.absoluteString ?? "INVALID URL")
-            🛸[Headers]: \(String(describing: request.allHTTPHeaderFields))
+            🛸[Request Headers]: \(String(describing: request.allHTTPHeaderFields))
             🛩️[RESPONSE]: \(getPrettyJSONString(data))
         """
         if Self.instance.printLogs {
-            log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW REQUEST]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
+            log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW SERVICE CALL]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
             log(responseDescription)
         }
         //
         return NetworkResponse(
-            status: httpResponse.statusCode,
+            status: response.statusCode,
             time: 1,
-            size: 1,
+            size: rawResponse.expectedContentLength,
             data: data,
             description: responseDescription
         )
