@@ -8,16 +8,20 @@
 import Foundation
 
 struct UserModel: Hashable {
+    let id: Int
     let name: String
     let role: String
     let email: String
     let phoneNumber: String
+    let phoyoURL: URL?
     
     static let example: Self = .init(
+        id: 1,
         name: "Malcom Bailey",
         role: "Frontend developer",
         email: "email@email.com",
-        phoneNumber: "+38 (098) 278 76 24"
+        phoneNumber: "+38 (098) 278 76 24",
+        phoyoURL: URL(string: "")
     )
     static let examples: [Self] = .init(
         repeating: Self.example,
