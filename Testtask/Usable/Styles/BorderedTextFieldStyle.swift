@@ -12,15 +12,15 @@ struct BorderedTextFieldStyle: TextFieldStyle {
     
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
-            .padding(.horizontal,15)
-            .padding(.vertical,20)
-            .cornerRadius(10)
-            .overlay(
-                tint,
-                in: RoundedRectangle(
-                    cornerRadius: 10
-                ).stroke(lineWidth: 1)
-            )
+//            .padding(.horizontal,15)
+//            .padding(.vertical,20)
+//            .cornerRadius(10)
+//            .overlay(
+//                tint.opacity(0.7),
+//                in: RoundedRectangle(
+//                    cornerRadius: 10
+//                ).stroke(lineWidth: 1)
+//            )
     }
     
     static let redBordered = BorderedTextFieldStyle(tint: .red)

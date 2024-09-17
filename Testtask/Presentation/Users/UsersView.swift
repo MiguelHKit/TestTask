@@ -24,13 +24,12 @@ class UsersViewModel: ObservableObject {
     func getUsers() async {
         do {
             // call to network
-            guard
-                let response = try await self.userServices.getUsers(
-                    page: self.page + 1,
-                    count: self.pageSize
-                ),
-                response.success == true //bcs of optional
-            else { throw NetworkError.dataError }
+            let response = try await self.userServices.getUsers(
+                page: self.page + 1,
+                count: self.pageSize
+            )
+            guard response.success == true //bcs of optional
+            else { throw NetworkError.custom(message: response.message.unwrap()) }
             // Mapping
             self.hasMore = response.links?.nextUrl != nil
             let newUsers = response.users.compactMap { $0 }.map {

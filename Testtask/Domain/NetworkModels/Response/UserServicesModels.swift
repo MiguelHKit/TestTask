@@ -25,6 +25,7 @@ struct GetUsersResponse: Codable {
     let page: Int?
     let links: Self.Links?
     let users: [UserCodable?]
+    let message: String?
     struct Links: Codable {
         let nextUrl: String?
         let prevUrl: String?
@@ -43,7 +44,8 @@ struct GetUserResponse: Codable {
 
 struct GetPositionsResponse: Codable {
     let success: Bool?
-    let positions: [PositionItem]
+    let positions: [PositionItem?]
+    let message: String?
     struct PositionItem: Codable {
         let id: Int?
         let name: String?
@@ -53,4 +55,5 @@ struct GetPositionsResponse: Codable {
 struct GetTokenResponse: Codable {
     let success: Bool?
     let token: String?
+    let message: String?
 }

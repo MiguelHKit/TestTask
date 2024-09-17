@@ -14,7 +14,7 @@ actor UserServices {
         
     }
     
-    func getUsers(page: Int, count: Int) async throws -> GetUsersResponse? {
+    func getUsers(page: Int, count: Int) async throws -> GetUsersResponse {
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -31,7 +31,7 @@ actor UserServices {
         )
     }
     
-    func getUser(id: Int) async throws -> GetUserResponse? {
+    func getUser(id: Int) async throws -> GetUserResponse {
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -44,7 +44,7 @@ actor UserServices {
         )
     }
     
-    func getPositions() async throws -> GetPositionsResponse? {
+    func getPositions() async throws -> GetPositionsResponse {
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -57,7 +57,7 @@ actor UserServices {
         )
     }
     
-    func getToken() async throws -> GetTokenResponse? {
+    func getToken() async throws -> GetTokenResponse {
         return try await NetworkManager.request(
             request: .init(
                 url: .init(

@@ -17,6 +17,9 @@
 		84171B0A2C92885B00089B06 /* RadioSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B092C92885B00089B06 /* RadioSelectionView.swift */; };
 		84171B0C2C92902800089B06 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B0B2C92902800089B06 /* Collection.swift */; };
 		84171B0E2C92A68700089B06 /* BorderedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B0D2C92A68700089B06 /* BorderedTextFieldStyle.swift */; };
+		8425180A2C98B976002B6CA4 /* HideKeyboardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */; };
+		8425180C2C98B99F002B6CA4 /* UIAplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8425180B2C98B99F002B6CA4 /* UIAplication.swift */; };
+		8425180E2C98C9A4002B6CA4 /* DisableWhenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */; };
 		8445BC032C9496DD0079E4AC /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC022C9496DD0079E4AC /* Print.swift */; };
 		8445BC052C94A4C00079E4AC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC042C94A4C00079E4AC /* String.swift */; };
 		846CA0EC2C978B4500692144 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846CA0EB2C978B4500692144 /* Int.swift */; };
@@ -45,6 +48,9 @@
 		84171B092C92885B00089B06 /* RadioSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSelectionView.swift; sourceTree = "<group>"; };
 		84171B0B2C92902800089B06 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		84171B0D2C92A68700089B06 /* BorderedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextFieldStyle.swift; sourceTree = "<group>"; };
+		842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideKeyboardModifier.swift; sourceTree = "<group>"; };
+		8425180B2C98B99F002B6CA4 /* UIAplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAplication.swift; sourceTree = "<group>"; };
+		8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableWhenModifier.swift; sourceTree = "<group>"; };
 		8445BC022C9496DD0079E4AC /* Print.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
 		8445BC042C94A4C00079E4AC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		846CA0EB2C978B4500692144 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 				8445BC042C94A4C00079E4AC /* String.swift */,
 				846CA0EB2C978B4500692144 /* Int.swift */,
 				846CA0ED2C978F9800692144 /* Optional.swift */,
+				8425180B2C98B99F002B6CA4 /* UIAplication.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -178,6 +185,8 @@
 			isa = PBXGroup;
 			children = (
 				846CA0F12C98025600692144 /* LoadingModifier.swift */,
+				842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */,
+				8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -358,9 +367,12 @@
 				846CA0EE2C978F9800692144 /* Optional.swift in Sources */,
 				847E100D2C98A4E4004AA54A /* NetworkModels.swift in Sources */,
 				84171AF02C92204300089B06 /* NoConnectionView.swift in Sources */,
+				8425180A2C98B976002B6CA4 /* HideKeyboardModifier.swift in Sources */,
+				8425180E2C98C9A4002B6CA4 /* DisableWhenModifier.swift in Sources */,
 				847E10132C98A607004AA54A /* UsersViewModel.swift in Sources */,
 				84AB9C782C911A1D00CDE749 /* MainView.swift in Sources */,
 				8445BC032C9496DD0079E4AC /* Print.swift in Sources */,
+				8425180C2C98B99F002B6CA4 /* UIAplication.swift in Sources */,
 				84171AF62C9221EE00089B06 /* SignUpView.swift in Sources */,
 				847E100B2C98A4B6004AA54A /* NetworkRequest.swift in Sources */,
 				847E100F2C98A591004AA54A /* UserServicesModels.swift in Sources */,

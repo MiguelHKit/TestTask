@@ -18,6 +18,7 @@ enum NetworkError: Error {
     case invalidParameters
     case authorizationError
     case URLPathHasNoSlash
+    case custom(message: String)
 //    case noModelDefined
 }
 
