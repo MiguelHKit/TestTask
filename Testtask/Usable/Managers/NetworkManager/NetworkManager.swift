@@ -79,4 +79,22 @@ final class NetworkManager {
         guard let dataDecoded = try? jsonDecoder.decode(T.self, from: response.data) else { throw NetworkError.decodingError }
         return dataDecoded
     }
+    public static func multipartRequest<T: Codable>(url: NetworkRequest.NetworkURL, formData: [NetworkRequest.NetworkHTTPBody.FormData],autorization: NetworkRequest.NetworkAutorization = .none) async throws -> T {
+        let boundary = UUID().uuidString
+        return try await self.request(
+            request: .init(
+                url: url,
+                method: .post,
+                params: [],
+                authorization: autorization,
+                headers: [
+                    .contentType(value: "multipart/form-data; boundary=\(boundary)")
+                ],
+                body: .formData(
+                    boundary: boundary,
+                    params: formData
+                )
+            )
+        )
+    }
 }

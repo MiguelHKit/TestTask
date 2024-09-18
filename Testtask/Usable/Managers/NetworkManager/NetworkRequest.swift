@@ -122,7 +122,7 @@ struct NetworkRequest {
     enum NetworkHTTPBody {
         case none
         case raw(params: Parameters)
-//        case formData(params: FormDataParameters)
+        case formData(boundary: String, params: [Self.FormData])
         case x_www_form_urlencoded(params: [String: Any])
         case binary(data: Data)
         case graphQL(query: String, variables: String)
@@ -138,21 +138,39 @@ struct NetworkRequest {
                 } catch {
                     throw NetworkError.encodingBodyError
                 }
-//            case .formData(let params):
-//                var httpBody = NSMutableData()
-//
-//                try params.forEach { key, value in
-//                    if let actualValue = value as? String {
-//
-//                    }
-//                    else if let actualValue = value as? Data {
-//
-//                    }
-//                    else {
-//                        throw NetworkError.invalidParameters
-//                    }
-//                }
-//                return Data()
+            case .formData(let boundary, let params):
+                var body = Data()
+                //
+                for param in params {
+                    switch param.value {
+                    case .string(let value):
+                        if
+                            let boundaryData = "--\(boundary)\r\n".data(using: .utf8),
+                            let dispositionData = "Content-Disposition: form-data; name=\"\(param.key)\"\r\n\r\n".data(using: .utf8),
+                            let valueData = "\(value)\r\n".data(using: .utf8)
+                        {
+                            body.append(boundaryData)
+                            body.append(dispositionData)
+                            body.append(valueData)
+                        }
+                    case .data(let fileData, let fileName, let mimeType):
+                        if
+                            let boundaryData = "--\(boundary)\r\n".data(using: .utf8),
+                            let dispositionData = "Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8),
+                            let typeData = "Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8),
+                            let rnData = "\r\n".data(using: .utf8),
+                            let closingBoundaryData = "--\(boundary)--\r\n".data(using: .utf8)
+                        {
+                            body.append(boundaryData)
+                            body.append(dispositionData)
+                            body.append(typeData)
+                            body.append(fileData)
+                            body.append(rnData)
+                            body.append(closingBoundaryData)
+                        }
+                    }
+                }
+                return body
             case .x_www_form_urlencoded:
                 return Data()
             case .binary:
@@ -162,8 +180,20 @@ struct NetworkRequest {
             }
         }
         
-        private func decodeFromAny() {
-            
+        struct FormData {
+            let key: String
+            let value: Self.FormDataType
+            enum FormDataType {
+                case string(value: String)
+                case data(fileData: Data, fileName: String, mimeType: MimeType)
+            }
+            enum MimeType: String {
+                case textplain = "text/plain"
+                case textHtml = "text/html"
+                case imageJpeg = "image/jpeg"
+                case applicationJson = "application/json"
+                case applicationPdf = "application/pdf"
+            }
         }
     }
     enum NetworkHTTPHeader {

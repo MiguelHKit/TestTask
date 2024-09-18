@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,7 +11,6 @@
 		84171AF02C92204300089B06 /* NoConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171AEF2C92204300089B06 /* NoConnectionView.swift */; };
 		84171AF22C9220E700089B06 /* AdviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171AF12C9220E700089B06 /* AdviceView.swift */; };
 		84171AF42C9221E400089B06 /* UsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171AF32C9221E400089B06 /* UsersView.swift */; };
-		84171AF62C9221EE00089B06 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171AF52C9221EE00089B06 /* SignUpView.swift */; };
 		84171AFB2C92269A00089B06 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171AFA2C92269A00089B06 /* UserModel.swift */; };
 		84171B042C92440300089B06 /* AppYellowButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B032C92440300089B06 /* AppYellowButtonStyle.swift */; };
 		84171B0A2C92885B00089B06 /* RadioSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84171B092C92885B00089B06 /* RadioSelectionView.swift */; };
@@ -22,6 +21,8 @@
 		8425180E2C98C9A4002B6CA4 /* DisableWhenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */; };
 		8445BC032C9496DD0079E4AC /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC022C9496DD0079E4AC /* Print.swift */; };
 		8445BC052C94A4C00079E4AC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC042C94A4C00079E4AC /* String.swift */; };
+		846C9D502C9B3FCD0041ADD5 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846C9D4F2C9B3FCD0041ADD5 /* UIImage.swift */; };
+		846C9D522C9B4D710041ADD5 /* PhotosPickerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846C9D512C9B4D710041ADD5 /* PhotosPickerItem.swift */; };
 		846CA0EC2C978B4500692144 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846CA0EB2C978B4500692144 /* Int.swift */; };
 		846CA0EE2C978F9800692144 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846CA0ED2C978F9800692144 /* Optional.swift */; };
 		846CA0F22C98025600692144 /* LoadingModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846CA0F12C98025600692144 /* LoadingModifier.swift */; };
@@ -42,7 +43,6 @@
 		84171AEF2C92204300089B06 /* NoConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoConnectionView.swift; sourceTree = "<group>"; };
 		84171AF12C9220E700089B06 /* AdviceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdviceView.swift; sourceTree = "<group>"; };
 		84171AF32C9221E400089B06 /* UsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersView.swift; sourceTree = "<group>"; };
-		84171AF52C9221EE00089B06 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		84171AFA2C92269A00089B06 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		84171B032C92440300089B06 /* AppYellowButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppYellowButtonStyle.swift; sourceTree = "<group>"; };
 		84171B092C92885B00089B06 /* RadioSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioSelectionView.swift; sourceTree = "<group>"; };
@@ -53,6 +53,8 @@
 		8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableWhenModifier.swift; sourceTree = "<group>"; };
 		8445BC022C9496DD0079E4AC /* Print.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
 		8445BC042C94A4C00079E4AC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		846C9D4F2C9B3FCD0041ADD5 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		846C9D512C9B4D710041ADD5 /* PhotosPickerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPickerItem.swift; sourceTree = "<group>"; };
 		846CA0EB2C978B4500692144 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		846CA0ED2C978F9800692144 /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		846CA0F12C98025600692144 /* LoadingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModifier.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 		847E100C2C98A4E4004AA54A /* NetworkModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModels.swift; sourceTree = "<group>"; };
 		847E100E2C98A591004AA54A /* UserServicesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserServicesModels.swift; sourceTree = "<group>"; };
 		847E10122C98A607004AA54A /* UsersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersViewModel.swift; sourceTree = "<group>"; };
+		849FD54D2C9A8425008D8783 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		84AB9C722C911A1D00CDE749 /* Testtask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Testtask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84AB9C752C911A1D00CDE749 /* TesttaskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesttaskApp.swift; sourceTree = "<group>"; };
 		84AB9C772C911A1D00CDE749 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -69,6 +72,10 @@
 		84AB9C7D2C911A1E00CDE749 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		84FFB5552C93F39B0003CB01 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		849FD5482C9A82D8008D8783 /* SignUp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SignUp; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		84AB9C6F2C911A1D00CDE749 /* Frameworks */ = {
@@ -128,6 +135,8 @@
 				846CA0EB2C978B4500692144 /* Int.swift */,
 				846CA0ED2C978F9800692144 /* Optional.swift */,
 				8425180B2C98B99F002B6CA4 /* UIAplication.swift */,
+				846C9D4F2C9B3FCD0041ADD5 /* UIImage.swift */,
+				846C9D512C9B4D710041ADD5 /* PhotosPickerItem.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -229,6 +238,7 @@
 		84AB9C742C911A1D00CDE749 /* Testtask */ = {
 			isa = PBXGroup;
 			children = (
+				849FD54D2C9A8425008D8783 /* Info.plist */,
 				84AB9C852C911A4100CDE749 /* Main */,
 				84171AFC2C9240EC00089B06 /* Usable */,
 				84171AF72C92268000089B06 /* Domain */,
@@ -255,7 +265,7 @@
 				84AB9C772C911A1D00CDE749 /* MainView.swift */,
 				84171AED2C921E8800089B06 /* Launch Screen.storyboard */,
 				84171AEF2C92204300089B06 /* NoConnectionView.swift */,
-				84171AF52C9221EE00089B06 /* SignUpView.swift */,
+				849FD5482C9A82D8008D8783 /* SignUp */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -299,6 +309,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				849FD5482C9A82D8008D8783 /* SignUp */,
 			);
 			name = Testtask;
 			productName = Testtask;
@@ -362,10 +375,12 @@
 				84171AF42C9221E400089B06 /* UsersView.swift in Sources */,
 				84171B0C2C92902800089B06 /* Collection.swift in Sources */,
 				84171B0E2C92A68700089B06 /* BorderedTextFieldStyle.swift in Sources */,
+				846C9D502C9B3FCD0041ADD5 /* UIImage.swift in Sources */,
 				84171B0A2C92885B00089B06 /* RadioSelectionView.swift in Sources */,
 				84171AFB2C92269A00089B06 /* UserModel.swift in Sources */,
 				846CA0EE2C978F9800692144 /* Optional.swift in Sources */,
 				847E100D2C98A4E4004AA54A /* NetworkModels.swift in Sources */,
+				846C9D522C9B4D710041ADD5 /* PhotosPickerItem.swift in Sources */,
 				84171AF02C92204300089B06 /* NoConnectionView.swift in Sources */,
 				8425180A2C98B976002B6CA4 /* HideKeyboardModifier.swift in Sources */,
 				8425180E2C98C9A4002B6CA4 /* DisableWhenModifier.swift in Sources */,
@@ -373,7 +388,6 @@
 				84AB9C782C911A1D00CDE749 /* MainView.swift in Sources */,
 				8445BC032C9496DD0079E4AC /* Print.swift in Sources */,
 				8425180C2C98B99F002B6CA4 /* UIAplication.swift in Sources */,
-				84171AF62C9221EE00089B06 /* SignUpView.swift in Sources */,
 				847E100B2C98A4B6004AA54A /* NetworkRequest.swift in Sources */,
 				847E100F2C98A591004AA54A /* UserServicesModels.swift in Sources */,
 				84171AF22C9220E700089B06 /* AdviceView.swift in Sources */,
@@ -514,6 +528,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Testtask/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -552,6 +568,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Testtask/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

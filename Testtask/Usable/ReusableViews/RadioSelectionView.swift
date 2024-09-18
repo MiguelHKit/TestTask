@@ -9,7 +9,7 @@ import SwiftUI
 
 fileprivate struct RadioButton: View {
     let id: Int
-    @Binding var selectedId: Int
+    @Binding var selectedId: Int?
     var tint: Color
 
     var body: some View {
@@ -23,10 +23,9 @@ fileprivate struct RadioButton: View {
 }
 
 fileprivate struct RadioSelectionView: View {
-    @State private var selectedId: Int = -1
-    @Binding var selectedItem: String
+    @Binding var selectedId: Int?
     @Binding var selectedItems: [String]
-    var items: [String]
+    var items: [(key: Int, value: String)]
     var titleLabel: String
     var allowMultiselection: Bool
     var tint: Color
@@ -38,48 +37,36 @@ fileprivate struct RadioSelectionView: View {
                     .font(.title2)
                 Spacer()
             }
-            ForEach(items.indices, id: \.self) { index in
+            ForEach(items, id: \.key) { item in
                 HStack {
                     RadioButton(
-                        id: index,
+                        id: item.key,
                         selectedId: $selectedId,
                         tint: tint
                     )
-                    Text(items[index])
+                    Text(item.value)
                         .foregroundColor(.black)
-                        .onTapGesture { selectedId = index } // is necesary this tapEvent causea visual bug when user taps
+                        .onTapGesture { selectedId = item.key } // is necesary this tapEvent causea visual bug when user taps
                     Spacer()
                 }
                 .padding(.top)
                 .padding(.leading)
             }
         }
-        .onChange(of: selectedId) {
-            guard 
-                selectedId >= 0,
-                let selected = items[safe: selectedId]
-            else { selectedItem = ""; return }
-//            if allowMultiselection {
-//                selectedItems.append(selected)
-////                selectedItems = Array(Set(selectedItems))
-//            } else {
-                selectedItem = selected
-//            }
-        }
     }
 }
 
 struct RadioSingleSelectionView: View {
-    @Binding var selectedItem: String
-    var items: [String]
+    @Binding var selectedId: Int?
+    var items: [Int:String]
     var titleLabel: String
     var tint: Color = .appCyan
     
     var body: some View {
         RadioSelectionView(
-            selectedItem: $selectedItem,
+            selectedId: $selectedId,
             selectedItems: .constant([]),
-            items: items,
+            items: items.map { ($0.key, $0.value) },
             titleLabel: titleLabel,
             allowMultiselection: false,
             tint: tint
@@ -106,15 +93,19 @@ struct RadioSingleSelectionView: View {
 //}
 
 fileprivate struct PreviewView: View {
-    @State var selectedOption: String = ""
-    @State var selectedOptions: [String] = []
-    var items: [String] = .init(repeating: "Item", count: 25)
+    @State var selectedOption: Int? = nil
+    @State var selectedOptions: [Int:String] = [:]
+    var items: [Int:String] = [
+        0:"item 1",
+        1:"item 2",
+        2:"item 3",
+    ]
     
     var body: some View {
 //        TabView {
             ScrollView {
                 RadioSingleSelectionView(
-                    selectedItem: $selectedOption,
+                    selectedId: $selectedOption,
                     items: items,
                     titleLabel: "Select your position"
                 )

@@ -18,4 +18,24 @@ extension String {
         let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
         return phonePredicate.evaluate(with: self)
     }
+    func formatPhoneNumber() -> String {
+        let cleanNumber = components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        
+        let mask = "+XX (XXX) XXX - XX - XX"
+        
+        var result = ""
+        var startIndex = cleanNumber.startIndex
+        var endIndex = cleanNumber.endIndex
+        
+        for char in mask where startIndex < endIndex {
+            if char == "X" {
+                result.append(cleanNumber[startIndex])
+                startIndex = cleanNumber.index(after: startIndex)
+            } else {
+                result.append(char)
+            }
+        }
+        
+        return result
+    }
 }

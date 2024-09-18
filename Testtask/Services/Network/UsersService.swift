@@ -7,11 +7,22 @@
 
 import Foundation
 
+struct UserRegistrationResponse: Codable {
+    
+}
+
 actor UserServices {
     let baseURL = NetworkManager.BASE_URL
     
-    func submitUser() async throws -> Void {
-        
+    func userRegistration(token: String, formData: [NetworkRequest.NetworkHTTPBody.FormData]) async throws -> UserRegistrationResponse {
+        return try await NetworkManager.multipartRequest(
+            url: .init(
+                baseURL: self.baseURL,
+                version: .v1,
+                path: "users"
+            ),
+            formData: formData
+        )
     }
     
     func getUsers(page: Int, count: Int) async throws -> GetUsersResponse {
