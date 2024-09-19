@@ -61,7 +61,7 @@ struct NetworkRequest {
     struct NetworkParameter {
         let name: String
         let value: String
-        let on: Self.parameterType
+        var on: Self.parameterType = .query
         enum parameterType {
             case query
             case requestBody
@@ -153,22 +153,28 @@ struct NetworkRequest {
                             body.append(dispositionData)
                             body.append(valueData)
                         }
-                    case .data(let fileData, let fileName, let mimeType):
+                    case .data(let fileData, let mimeType):
+                        let filename = switch mimeType {
+                        case .imageJpeg: "image.jpg"
+                        default: "file"
+                        }
                         if
                             let boundaryData = "--\(boundary)\r\n".data(using: .utf8),
-                            let dispositionData = "Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8),
+                            let dispositionData = "Content-Disposition: form-data; name=\"\(param.key)\"; filename=\"\(filename)\"\r\n".data(using: .utf8),
                             let typeData = "Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8),
-                            let rnData = "\r\n".data(using: .utf8),
-                            let closingBoundaryData = "--\(boundary)--\r\n".data(using: .utf8)
+                            let rnData = "\r\n".data(using: .utf8)
                         {
+                            //
                             body.append(boundaryData)
                             body.append(dispositionData)
                             body.append(typeData)
                             body.append(fileData)
                             body.append(rnData)
-                            body.append(closingBoundaryData)
                         }
                     }
+                }
+                if let closingBoundaryData = "--\(boundary)--\r\n".data(using: .utf8) {
+                    body.append(closingBoundaryData)
                 }
                 return body
             case .x_www_form_urlencoded:
@@ -185,7 +191,7 @@ struct NetworkRequest {
             let value: Self.FormDataType
             enum FormDataType {
                 case string(value: String)
-                case data(fileData: Data, fileName: String, mimeType: MimeType)
+                case data(fileData: Data, mimeType: MimeType)
             }
             enum MimeType: String {
                 case textplain = "text/plain"

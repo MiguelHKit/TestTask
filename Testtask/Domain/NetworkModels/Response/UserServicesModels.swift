@@ -57,3 +57,16 @@ struct GetTokenResponse: Codable {
     let token: String?
     let message: String?
 }
+
+struct UserRegistrationResponse: Codable {
+    let success: Bool?
+    let message: String?
+    let fails: Self.Fails?
+    struct Fails: Codable {
+        let name: [String?]?
+        let email: [String?]?
+        let phone: [String?]?
+        let position_Id: [String?]?
+        let photo: [String?]?
+    }
+}

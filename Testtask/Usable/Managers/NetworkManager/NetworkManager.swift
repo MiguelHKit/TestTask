@@ -37,6 +37,7 @@ final class NetworkManager {
         request.httpMethod = req.method.rawValue
         //Add Body
         request.httpBody = try req.body.encodedAsData()
+        print("[Request body]: \(String(describing: String(data: request.httpBody ?? Data(), encoding: .utf8)))")
         //Add headers
         req.headers.forEach {
             request.addValue($0.getValue(), forHTTPHeaderField: $0.getKey())
@@ -79,17 +80,26 @@ final class NetworkManager {
         guard let dataDecoded = try? jsonDecoder.decode(T.self, from: response.data) else { throw NetworkError.decodingError }
         return dataDecoded
     }
-    public static func multipartRequest<T: Codable>(url: NetworkRequest.NetworkURL, formData: [NetworkRequest.NetworkHTTPBody.FormData],autorization: NetworkRequest.NetworkAutorization = .none) async throws -> T {
+    /// Function for upload a multipartRequest using form data in order to send files,
+    /// the header for multipart/formadata is already setted, no need to added
+    /// - Parameters:
+    ///   - url: NetworkRequest.NetworkURL
+    ///   - params: Array of NetworkRequest.NetworkParameter
+    ///   - receivedHeaders: NetworkRequest.NetworkHeader]
+    ///   - formData: Array of NetworkRequest.NetworkBody.FormData
+    ///   - autorization: NetworkRequest.NetworkAutorization
+    /// - Returns: Codable model
+    public static func multipartRequest<T: Codable>(url: NetworkRequest.NetworkURL, params: [NetworkRequest.NetworkParameter] = [], headers receivedHeaders: [NetworkRequest.NetworkHTTPHeader] = [], formData: [NetworkRequest.NetworkHTTPBody.FormData],autorization: NetworkRequest.NetworkAutorization = .none) async throws -> T {
         let boundary = UUID().uuidString
+        var headers = receivedHeaders
+        headers.append(.contentType(value: "multipart/form-data; boundary=\(boundary)"))
         return try await self.request(
             request: .init(
                 url: url,
                 method: .post,
-                params: [],
+                params: params,
                 authorization: autorization,
-                headers: [
-                    .contentType(value: "multipart/form-data; boundary=\(boundary)")
-                ],
+                headers: headers,
                 body: .formData(
                     boundary: boundary,
                     params: formData

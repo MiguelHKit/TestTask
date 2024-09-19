@@ -25,3 +25,11 @@ extension Array where Element: ExpressibleByNilLiteral {
         return self.compactMap { $0 }
     }
 }
+
+extension Array where Element == String? {
+    func mapToErrorMsj() -> String? {
+        let array = self.compactMap{ $0 }
+        if array.isEmpty { return nil }
+        else {return array.joined(separator: "\n")}
+    }
+}

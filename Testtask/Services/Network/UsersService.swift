@@ -7,10 +7,6 @@
 
 import Foundation
 
-struct UserRegistrationResponse: Codable {
-    
-}
-
 actor UserServices {
     let baseURL = NetworkManager.BASE_URL
     
@@ -21,6 +17,9 @@ actor UserServices {
                 version: .v1,
                 path: "users"
             ),
+            headers: [
+                .custom(key: "token", value: token)
+            ],
             formData: formData
         )
     }

@@ -32,7 +32,9 @@ class SignUpViewModel: ObservableObject {
     @Published var photoNameErrorMsj: String? = nil
     @Published var sendButtonDisabled: Bool = false
     //
+    @Published var isLoading: Bool = false
     @Published var isLoadingPositions: Bool = true
+    @Published var isLoadingPhoto: Bool = false
     @Published var isSending: Bool = false
     private var services: UserServices = .init()
     private var cancellables = Set<AnyCancellable>()
@@ -90,7 +92,7 @@ class SignUpViewModel: ObservableObject {
     }
     func validateEmail(_ email: String) -> String? {
         guard email.isNotEmpty else { return "email cannot be empty" }
-        guard email.isEmail() else { return "invalid email format" }
+        guard email.isEmailRFC2822() else { return "invalid email format" }
         return nil
     }
     func validatePhone(_ name: String) -> String? {
@@ -129,35 +131,43 @@ class SignUpViewModel: ObservableObject {
     }
     @Sendable
     func submit() async {
+        self.isLoading = true
         self.validateUser()
         guard
             nameErrorMsj == nil,
             emailErrorMsj == nil,
             phoneErrorMsj == nil,
             photoNameErrorMsj == nil
-        else { return }
+        else { self.isLoading = false; return }
         do {
-            self.isSending = true
             // ask for token
             guard let positionSelection, let photo else { throw NetworkError.localRequestError }
             let tokenResponse = try await self.services.getToken()
             guard tokenResponse.success == true else { throw NetworkError.custom(message: tokenResponse.message.unwrap()) }
-            let resitrationResponse = try await self.services.userRegistration(
+            let registrationResponse = try await self.services.userRegistration(
                 token: tokenResponse.token.unwrap(),
                 formData: [
                     .init(key: "name", value: .string(value: self.name)),
                     .init(key: "email", value: .string(value: self.email)),
-                    .init(key: "phone", value: .string(value: self.phone)),
+                    .init(key: "phone", value: .string(value: self.phone.cleanPhoneNumber())),
                     .init(key: "position_id", value: .string(value: positionSelection.description)),
-                    .init(key: "photo", value: .data(fileData: photo.jpegData, fileName: "image.jpg", mimeType: .imageJpeg))
+                    .init(key: "photo", value: .data(fileData: photo.jpegData, mimeType: .imageJpeg))
                 ]
             )
             // submit Info
+            guard registrationResponse.success == true else {
+                self.nameErrorMsj = registrationResponse.fails?.name?.mapToErrorMsj()
+                self.emailErrorMsj = registrationResponse.fails?.email?.mapToErrorMsj()
+                self.phoneErrorMsj = registrationResponse.fails?.phone?.mapToErrorMsj()
+                self.photoNameErrorMsj = registrationResponse.fails?.photo?.mapToErrorMsj()
+                self.editingHasStarted = false // Reset edit status
+                throw NetworkError.custom(message: registrationResponse.message.unwrap())
+            }
             // success
-            self.isSending = true
+            self.isLoading = false
         } catch {
-            self.isSending = false
+            self.isLoading = false
+            
         }
-        self.isSending = false
     }
 }

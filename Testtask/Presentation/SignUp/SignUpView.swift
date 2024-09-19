@@ -43,6 +43,7 @@ struct SignUpView: View {
         self.mainView
         .task(vm.getPositions)
         .animation(.easeIn, value: vm.isLoadingPositions)
+        .loading(isLoading: vm.isLoading)
         .hideKeyboardOnTap()
         .onChange(of: self.focusedField){ _, newValue in
             vm.editingHasStarted = newValue != nil
@@ -167,6 +168,7 @@ struct SignUpView: View {
                                 vm.photo = nil
                             }
                         )
+                        .loading(isLoading: vm.isLoadingPhoto)
                 })
                 .padding()
                 //Button
@@ -194,6 +196,7 @@ struct SignUpView: View {
                 //Layer 2
                 TextField("", text: value)
                     .font(.subheadline)
+                    .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: focusValue)
                     .padding(.horizontal,15)
                     .padding(.vertical, hasText ? 0 : 25)
@@ -247,7 +250,7 @@ struct SignUpView: View {
                     Image(uiImage: imageItem.uiImage)
                         .resizable(resizingMode: .stretch)
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 140)
+                        .frame(width: 100)
                         .padding(.trailing, 5)
                     VStack(alignment: .leading) {
                         Text("\(imageItem.fileSize)")
