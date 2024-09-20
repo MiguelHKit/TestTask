@@ -35,7 +35,6 @@ struct SignUpView: View {
     @State private var selectedImageData: Data? = nil
     @State private var showPhotoConfirmationDialog: Bool = false
     @State private var showPhotoPicker: Bool = false
-    @State private var showSuccessSignedUpModal: Bool = false
     @FocusState var focusedField: SignUpFocusField?
     @Environment(\.dismiss) var dissmissModal
     
@@ -75,21 +74,43 @@ struct SignUpView: View {
                 )
             }
         }
-        .fullScreenCover(isPresented: self.$showSuccessSignedUpModal,
+        .fullScreenCover(isPresented: $vm.showSuccessSignedUpModal,
                content: {
             AdviceView(
-                image: .successRegistered,
+                image: .serverSuccess,
                 title: "User succefully registered",
                 button: .init(
                     buttonTitle: "Got it",
                     action: {
-                        
+                        vm.showSuccessSignedUpModal = false
+                        vm.resetView()
                     }
                 )
             )
             .overlay(alignment: .topTrailing) {
                 Button("", systemImage: "xmark") {
-                    showSuccessSignedUpModal = false
+                    vm.showSuccessSignedUpModal = false
+                }
+                .foregroundStyle(.foreground)
+                .opacity(0.8)
+                .font(.title)
+                .padding(.trailing)
+            }
+        })
+        .fullScreenCover(item: $vm.serverErroMessage, content: { errorServer in
+            AdviceView(
+                image: .serverError,
+                title: errorServer.message,
+                button: .init(
+                    buttonTitle: "Try again",
+                    action: {
+                        vm.serverErroMessage = nil
+                    }
+                )
+            )
+            .overlay(alignment: .topTrailing) {
+                Button("", systemImage: "xmark") {
+                    vm.serverErroMessage = nil
                 }
                 .foregroundStyle(.foreground)
                 .opacity(0.8)
@@ -168,7 +189,7 @@ struct SignUpView: View {
                                 vm.photo = nil
                             }
                         )
-                        .loading(isLoading: vm.isLoadingPhoto)
+                        .loading(isLoading: vm.isLoadingPhoto, isOpaque: true)
                 })
                 .padding()
                 //Button
@@ -250,7 +271,7 @@ struct SignUpView: View {
                     Image(uiImage: imageItem.uiImage)
                         .resizable(resizingMode: .stretch)
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 100)
+                        .frame(width: 50)
                         .padding(.trailing, 5)
                     VStack(alignment: .leading) {
                         Text("\(imageItem.fileSize)")

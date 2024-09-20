@@ -8,80 +8,70 @@
 import Foundation
 import Combine
 
-enum SignUpField: CaseIterable {
-    case name
-    case email
-    case phone
-    case photo
-}
-
 @MainActor
 class SignUpViewModel: ObservableObject {
-    @Published var fields: [SignUpField] = SignUpField.allCases
-    @Published var editingHasStarted: Bool = false
+    // Name Field
     @Published var name: String = ""
     @Published var nameErrorMsj: String? = nil
+    // Email Field
     @Published var email: String = ""
     @Published var emailErrorMsj: String? = nil
+    // Phone field
     @Published var phone: String = ""
     @Published var phoneErrorMsj: String? = nil
+    // Position selection
     @Published var positionSelection: Int? = nil
     @Published var positionOptions: [Int:String] = [:]
+    // Photo field
     @Published var photo: ImageData? = nil
-    @Published var photoData: Data = .init()
     @Published var photoNameErrorMsj: String? = nil
-    @Published var sendButtonDisabled: Bool = false
     //
+    @Published var editingHasStarted: Bool = false
+    @Published var sendButtonDisabled: Bool = false
+    @Published var showSuccessSignedUpModal: Bool = false
+    @Published var serverErroMessage: ErrorMessageItem? = nil
+    // Loading var
     @Published var isLoading: Bool = false
     @Published var isLoadingPositions: Bool = true
     @Published var isLoadingPhoto: Bool = false
-    @Published var isSending: Bool = false
     private var services: UserServices = .init()
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        // listen to field changes in order to display errors
-        self.fields.forEach { field in
-            switch field {
-            case .name:
-                self.$name
-                    .drop(while: { [weak self] _ in
-                        self?.editingHasStarted == false
-                    })
-                    .sink { [weak self] in
-                        self?.nameErrorMsj = self?.validateName($0)
-                    }.store(in: &cancellables)
-            case .email:
-                self.$email
-                    .drop(while: { [weak self] _ in
-                        self?.editingHasStarted == false
-                    })
-                    .sink { [weak self] in
-                        self?.emailErrorMsj = self?.validateEmail($0)
-                    }.store(in: &cancellables)
-            case .phone:
-                self.$phone
-                    .drop(while: { [weak self] _ in
-                        self?.editingHasStarted == false
-                    })
-                    .sink { [weak self] in
-                        self?.phoneErrorMsj = self?.validatePhone($0)
-                    }.store(in: &cancellables)
-            case .photo:
-                self.$photo
-                    .drop(while: { [weak self] _ in
-                        self?.editingHasStarted == false
-                    })
-                    .sink { [weak self] in
-                        guard
-                            let image = $0?.uiImage,
-                            image.jpegData(compressionQuality: 1) != nil
-                        else { self?.photoNameErrorMsj = "Photo is required"; return }
-                        self?.photoNameErrorMsj = nil
-                    }.store(in: &cancellables)
-            }
-        }
-        // condition for enabling submit button
+        // Listen to this field changes
+        self.$name
+            .drop(while: { [weak self] _ in
+                self?.editingHasStarted == false
+            })
+            .sink { [weak self] in
+                self?.nameErrorMsj = self?.validateName($0)
+            }.store(in: &cancellables)
+        self.$email
+            .drop(while: { [weak self] _ in
+                self?.editingHasStarted == false
+            })
+            .sink { [weak self] in
+                self?.emailErrorMsj = self?.validateEmail($0)
+            }.store(in: &cancellables)
+        self.$phone
+            .drop(while: { [weak self] _ in
+                self?.editingHasStarted == false
+            })
+            .sink { [weak self] in
+                self?.phoneErrorMsj = self?.validatePhone($0)
+            }.store(in: &cancellables)
+        self.$photo
+            .drop(while: { [weak self] _ in
+                self?.editingHasStarted == false
+            })
+            .sink { [weak self] in
+                guard
+                    let image = $0?.uiImage,
+                    image.jpegData(compressionQuality: 1) != nil
+                else { self?.photoNameErrorMsj = "Photo is required"; return }
+                self?.photoNameErrorMsj = nil
+            }.store(in: &cancellables)
+        // Cndition for enabling submit button
         self.$positionSelection.sink { [weak self] in
             self?.sendButtonDisabled = $0 == nil
         }.store(in: &cancellables)
@@ -106,6 +96,25 @@ class SignUpViewModel: ObservableObject {
         self.phone = self.phone
         self.positionSelection = self.positionSelection
         self.photo = self.photo
+    }
+    func resetView() {
+        self.editingHasStarted = false
+        self.name = ""
+        self.nameErrorMsj = nil
+        self.email = ""
+        self.emailErrorMsj = nil
+        self.phone = ""
+        self.phoneErrorMsj = nil
+        self.positionSelection = nil
+        self.photo = nil
+        self.photoNameErrorMsj = nil
+        self.sendButtonDisabled = false
+        self.showSuccessSignedUpModal = false
+        self.serverErroMessage = nil
+        self.isLoading = false
+        self.isLoadingPositions = true
+        self.isLoadingPhoto = false
+        Task { await self.getPositions() }
     }
     // MARK: - Service
     @Sendable
@@ -144,12 +153,14 @@ class SignUpViewModel: ObservableObject {
             guard let positionSelection, let photo else { throw NetworkError.localRequestError }
             let tokenResponse = try await self.services.getToken()
             guard tokenResponse.success == true else { throw NetworkError.custom(message: tokenResponse.message.unwrap()) }
+            var phoneFinalFormat = self.phone.cleanPhoneNumber()
+            phoneFinalFormat.insert("+", at: phoneFinalFormat.startIndex)
             let registrationResponse = try await self.services.userRegistration(
                 token: tokenResponse.token.unwrap(),
                 formData: [
                     .init(key: "name", value: .string(value: self.name)),
                     .init(key: "email", value: .string(value: self.email)),
-                    .init(key: "phone", value: .string(value: self.phone.cleanPhoneNumber())),
+                    .init(key: "phone", value: .string(value: phoneFinalFormat)),
                     .init(key: "position_id", value: .string(value: positionSelection.description)),
                     .init(key: "photo", value: .data(fileData: photo.jpegData, mimeType: .imageJpeg))
                 ]
@@ -165,9 +176,12 @@ class SignUpViewModel: ObservableObject {
             }
             // success
             self.isLoading = false
+            self.showSuccessSignedUpModal = true
+        } catch NetworkError.custom(let message) {
+            self.serverErroMessage = .init(message: message)
+            self.isLoading = false
         } catch {
             self.isLoading = false
-            
         }
     }
 }

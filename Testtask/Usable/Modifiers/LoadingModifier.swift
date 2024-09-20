@@ -9,10 +9,12 @@ import SwiftUI
 
 
 struct LoadingView: View {
+    var isOpaque: Bool
+    
     var body: some View {
         ZStack {
             Color.appBackground
-//                .opacity(0.2)
+                .opacity(isOpaque ? 0.2 : 1)
 //                .edgesIgnoringSafeArea(.all)
             
             ProgressView()
@@ -25,23 +27,24 @@ struct LoadingView: View {
 
 struct LoadingModifier: ViewModifier {
     var isLoading: Bool
+    var isOpaque: Bool
 
     func body(content: Content) -> some View {
         ZStack {
             content
             if isLoading {
-                LoadingView()
+                LoadingView(isOpaque: true)
             }
         }
     }
 }
 
 extension View {
-    func loading(isLoading: Bool) -> some View {
-        self.modifier(LoadingModifier(isLoading: isLoading))
+    func loading(isLoading: Bool, isOpaque: Bool = true) -> some View {
+        self.modifier(LoadingModifier(isLoading: isLoading, isOpaque: isOpaque))
     }
 }
 
 #Preview {
-    LoadingView()
+    LoadingView(isOpaque: true)
 }

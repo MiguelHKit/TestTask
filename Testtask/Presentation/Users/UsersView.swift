@@ -70,7 +70,8 @@ struct UsersView: View {
             self.listView
         }
         .task(vm.onAppearTask)
-        .loading(isLoading: vm.isLoading)
+        .refreshable(action: vm.onAppearTask)
+        .loading(isLoading: vm.isLoading, isOpaque: true)
     }
     
     @ViewBuilder
@@ -84,6 +85,7 @@ struct UsersView: View {
         } else {
             List(vm.data, id: \.self) { item in
                 self.rowView(item: item)
+                    .listRowSeparator(.hidden, edges: .top)
                     .listRowSeparator(vm.data.last == item ? .hidden : .visible)
                 // Progress to load pagination
                 if vm.data.last == item && vm.hasMore {

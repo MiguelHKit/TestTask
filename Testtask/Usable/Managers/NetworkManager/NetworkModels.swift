@@ -20,7 +20,13 @@ enum NetworkError: Error {
     case URLPathHasNoSlash
     case localRequestError
     case custom(message: String)
+    case validationError
 //    case noModelDefined
+}
+
+struct ErrorMessageItem: Identifiable {
+    let id = UUID()
+    let message: String
 }
 
 public typealias Parameters = [String: Any]
