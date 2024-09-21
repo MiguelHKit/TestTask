@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import Combine
 
-final class NetworkManager {
+class NetworkManager {
     private static let instance = NetworkManager()
+    private let connectivityMonitor = NetworkMonitor.instance
     //GENERAL CONFIGURATION
     static let IS_PRODUCTION: Bool = false
     static let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
@@ -58,7 +60,7 @@ final class NetworkManager {
             🛸[Request Headers]: \(String(describing: request.allHTTPHeaderFields))
             🛩️[RESPONSE]: \(getPrettyJSONString(data))
         """
-        if Self.instance.printLogs {
+        if await Self.instance.printLogs {
             log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW SERVICE CALL]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
             log(responseDescription)
         }
@@ -106,5 +108,15 @@ final class NetworkManager {
                 )
             )
         )
+    }
+    // Monitoring
+    private func stopMonitoring() {
+        Task {
+            self.connectivityMonitor.cancelMonitoring() // Cancelar el actor
+        }
+    }
+    
+    deinit {
+        stopMonitoring()
     }
 }
