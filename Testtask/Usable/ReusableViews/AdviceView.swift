@@ -23,9 +23,10 @@ struct AdviceView: View {
             VStack(spacing: 20){
                 Image(image)
                 Text(title)
+                    .font(.nunitoSans(size: 20))
                 if let button = self.button {
                     Button(button.buttonTitle, action: button.action)
-                        .buttonStyle(.appYellowButtonStyle)
+                        .buttonStyle(.appPrimaryFilledButtonStyle)
                 }
             }
         })

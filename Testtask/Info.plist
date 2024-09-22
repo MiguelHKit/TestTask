@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>NunitoSans_10pt-Regular.ttf</string>
+		<string>NunitoSans_10pt-Black.ttf</string>
+		<string>NunitoSans_10pt-Bold.ttf</string>
+		<string>NunitoSans_10pt-ExtraBold.ttf</string>
+		<string>NunitoSans_10pt-Italic.ttf</string>
+		<string>NunitoSans_10pt-Light.ttf</string>
+		<string>NunitoSans_10pt-Medium.ttf</string>
+		<string>NunitoSans_10pt-SemiBold.ttf</string>
+	</array>
+</dict>
 </plist>

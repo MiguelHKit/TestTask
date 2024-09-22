@@ -27,17 +27,17 @@ struct MainView: View {
                 .tag(TabSelection.signUp)
                 .tabItem { Label("Sign Up", systemImage: "person.crop.circle.fill.badge.plus") }
         }
-        .tint(.appCyan)
-        .fullScreenCover(isPresented: $vm.isNotConected) {
-            AdviceView(
-                image: .noConection,
-                title: "There is no internet conection",
-                button: .init(
-                    buttonTitle: "Try again",
-                    action: vm.retry
-                )
-            )
-        }
+        .tint(.appSecondary)
+//        .fullScreenCover(isPresented: $vm.isNotConected) {
+//            AdviceView(
+//                image: .noConection,
+//                title: "There is no internet conection",
+//                button: .init(
+//                    buttonTitle: "Try again",
+//                    action: vm.retry
+//                )
+//            )
+//        }
     }
 }
 

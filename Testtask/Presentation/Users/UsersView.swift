@@ -15,11 +15,11 @@ struct UsersView: View {
             HStack {
                 Spacer()
                 Text("Working with GET request")
-                    .font(.title2)
+                    .font(.nunitoSans(size: 20))
                 Spacer()
             }
             .padding(.vertical)
-            .background(.appYellow)
+            .background(.appPrimary)
             .clipped()
             self.listView
         }
@@ -65,6 +65,7 @@ struct UsersView: View {
     @ViewBuilder
     func rowView(item: UserModel) -> some View {
         HStack(spacing: 15) {
+            // Image
             VStack {
                 AsyncImage(url: item.phoyoURL) { phase in
                     let grayCircle = Circle()
@@ -85,25 +86,26 @@ struct UsersView: View {
                 
                 Spacer()
             }
-            VStack(alignment: .listRowSeparatorLeading, spacing: 7) {
+            // Content
+            VStack(alignment: .listRowSeparatorLeading, spacing: 0) {
                 Text(item.name)
-                    .font(.headline)
-                    .fontWeight(.regular)
+                    .font(.nunitoSans(size: 18))
                 Group {
                     Text(item.role)
                         .opacity(0.6)
-                        .padding(.bottom, 7)
-                    VStack(alignment: .listRowSeparatorLeading,spacing: 7) {
+                        .padding(.top, 4)
+                        .padding(.bottom, 10)
+                    VStack(alignment: .listRowSeparatorLeading,spacing: 6) {
                         Text(item.email)
                             .lineLimit(1)
                         Text(item.phoneNumber)
                     }
                 }
-                .font(.subheadline)
+                .font(.nunitoSans(size: 14))
                 Spacer()
             }
         }
-        .padding(.top, 20)
+        .padding(.top, 18)
 //        .background(.red)
     }
 }

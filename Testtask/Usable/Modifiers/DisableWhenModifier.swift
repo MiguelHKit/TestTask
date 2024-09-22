@@ -29,13 +29,13 @@ extension View {
         Button("Button") {
             
         }
-        .buttonStyle(.appYellowButtonStyle)
+        .buttonStyle(.appPrimaryFilledButtonStyle)
         .disabledWhen(.constant(true))
         
         Button("Button") {
             
         }
-        .buttonStyle(.appYellowButtonStyle)
+        .buttonStyle(.appPrimaryFilledButtonStyle)
         .disabledWhen(.constant(false))
     }
 })

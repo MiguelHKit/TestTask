@@ -7,29 +7,28 @@
 
 import SwiftUI
 
-struct AppYellowButtonStyle: ButtonStyle {
+struct PrimaryFilledButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(.vertical, 12)
             .padding(.horizontal, 24)
-            .background(.appYellow)
+            .background(configuration.isPressed ? .appPressedButton : .appPrimary)
             .clipShape(
                 Capsule(),
                 style: .init()
             )
-            .fontWeight(.medium)
+            .font(.nunitoSans(size: 18, weight: .medium))
             .accentColor(.primary)
-            .opacity(configuration.isPressed ? 0.5 : 1)
     }
 }
 
-extension ButtonStyle where Self == AppYellowButtonStyle {
-    static var appYellowButtonStyle: Self { Self() }
+extension ButtonStyle where Self == PrimaryFilledButtonStyle {
+    static var appPrimaryFilledButtonStyle: Self { Self() }
 }
 
 #Preview {
     VStack {
         Button("Press me", action: {})
-            .buttonStyle(.appYellowButtonStyle)
+            .buttonStyle(.appPrimaryFilledButtonStyle)
     }
 }

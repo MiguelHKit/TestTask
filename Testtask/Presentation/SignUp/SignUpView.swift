@@ -125,11 +125,11 @@ struct SignUpView: View {
             HStack {
                 Spacer()
                 Text("Working with POST request")
-                    .font(.title2)
+                    .font(.nunitoSans(size: 20))
                 Spacer()
             }
             .padding(.vertical)
-            .background(.appYellow)
+            .background(.appPrimary)
             .clipped()
             //
             ScrollView {
@@ -197,7 +197,7 @@ struct SignUpView: View {
                     Task(operation: vm.submit)
                 }
                 .padding(.bottom)
-                .buttonStyle(.appYellowButtonStyle)
+                .buttonStyle(.appPrimaryFilledButtonStyle)
                 .disabledWhen($vm.sendButtonDisabled)
             }
         }
@@ -208,15 +208,16 @@ struct SignUpView: View {
         let hasText: Bool = value.wrappedValue.isNotEmpty
         VStack(spacing: 10) {
             ZStack(alignment: .leading) {
-                // Layer 1
+                // Layer 1 : placeholder that covers all space
                 if !hasText {
                     Text(placeholder)
+                        .font(.nunitoSans(weight: .light))
                         .foregroundStyle(tint)
                         .padding(.leading, 15)
                 }
-                //Layer 2
+                //Layer 2: TF that changes when users start tapping
                 TextField("", text: value)
-                    .font(.subheadline)
+                    .font(.nunitoSans())
                     .textInputAutocapitalization(.never)
                     .focused($focusedField, equals: focusValue)
                     .padding(.horizontal,15)
@@ -225,18 +226,19 @@ struct SignUpView: View {
                     .padding(.top, hasText ? 30 : 0)
                     .cornerRadius(10)
                     .overlay(
-                        tint.opacity(0.7),
+                        (focusedField == focusValue && errorMsg == nil) ? .appSecondary : tint.opacity(0.7),
                         in: RoundedRectangle(
                             cornerRadius: 10
                         ).stroke(lineWidth: 1)
                     )
                     .overlay(alignment: .topLeading) {
+                        // Title of textfield when edditing
                         if hasText {
                             Text(placeholder)
                                 .foregroundColor(tint)
                                 .padding(.leading, 15)
                                 .padding(.top, 10)
-                                .font(.footnote)
+                                .font(.nunitoSans(size: 13, weight: .semibold))
                         }
                     }
             }
@@ -255,7 +257,7 @@ struct SignUpView: View {
                         Text(footer)
                         Spacer()
                     }
-                    .font(.footnote)
+                    .font(.nunitoSans(size: 13))
                     .padding(.leading, 15)
                     .foregroundStyle(tint)
                 }
@@ -282,15 +284,16 @@ struct SignUpView: View {
                     Button("", systemImage: "xmark", action: xmarkAction)
                 } else {
                     Text(placeholder)
+                        .font(.nunitoSans(weight: .light))
                         .foregroundColor(tint)
                     Spacer()
                     Button("Upload", action: uploadAction)
-                    .foregroundStyle(.appCyan)
-                    .padding(.trailing)
+                        .buttonStyle(.appSecondaryTextButtonStyle)
+//                    .padding(.trailing)
                 }
             }
             .padding(.horizontal,15)
-            .padding(.vertical,25)
+            .padding(.vertical,14)
             .cornerRadius(10)
             .overlay(
                 tint.opacity(0.7),

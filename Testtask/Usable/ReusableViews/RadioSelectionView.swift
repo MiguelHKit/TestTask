@@ -34,7 +34,7 @@ fileprivate struct RadioSelectionView: View {
         VStack {
             HStack {
                 Text(titleLabel)
-                    .font(.title2)
+                    .font(.nunitoSans(size: 18))
                 Spacer()
             }
             ForEach(items, id: \.key) { item in
@@ -45,6 +45,7 @@ fileprivate struct RadioSelectionView: View {
                         tint: tint
                     )
                     Text(item.value)
+                        .font(.nunitoSans(size: 16))
                         .foregroundColor(.black)
                         .onTapGesture { selectedId = item.key } // is necesary this tapEvent causea visual bug when user taps
                     Spacer()
@@ -60,7 +61,7 @@ struct RadioSingleSelectionView: View {
     @Binding var selectedId: Int?
     var items: [Int:String]
     var titleLabel: String
-    var tint: Color = .appCyan
+    var tint: Color = .appSecondary
     
     var body: some View {
         RadioSelectionView(
@@ -78,8 +79,8 @@ struct RadioSingleSelectionView: View {
 //    @Binding var selectedItems: [String]
 //    var items: [String]
 //    var titleLabel: String
-//    var tint: Color = .appCyan
-//    
+//    var tint: Color = .appSecondary
+//
 //    var body: some View {
 //        RadioSelectionView(
 //            selectedItem: .constant(""),
