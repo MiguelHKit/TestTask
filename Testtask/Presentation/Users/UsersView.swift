@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UsersView: View {
     @StateObject var vm: UsersViewModel = .init()
+    @State var progressViewId = 0
     
     var body: some View {
         VStack(spacing: 0) {
@@ -46,10 +47,13 @@ struct UsersView: View {
                     HStack {
                         Spacer()
                         ProgressView()
+                            .id(self.progressViewId)
+                            .progressViewStyle(.circular)
+                            .tint(.primary)
                             .scaleEffect(1.5)
+                            .onAppear { progressViewId += 1 }
                         Spacer()
                     }
-                    .tint(.primary)
                     .offset(y: -10)
                     .padding(.bottom, 20)
                     .listRowSeparator(.hidden)
@@ -68,19 +72,21 @@ struct UsersView: View {
             // Image
             VStack {
                 AsyncImage(url: item.phoyoURL) { phase in
-                    let grayCircle = Circle()
+                    let emptyImage = Image(.noPhoto)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .frame(width: 50)
-                        .foregroundStyle(.gray)
+                        .clipShape(Circle())
                     switch phase {
-                    case .empty: grayCircle
+                    case .empty: emptyImage
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50)
                             .clipShape(Circle())
-                    case .failure(_): grayCircle
-                    @unknown default: grayCircle
+                    case .failure(_): emptyImage
+                    @unknown default: emptyImage
                     }
                 }
                 
