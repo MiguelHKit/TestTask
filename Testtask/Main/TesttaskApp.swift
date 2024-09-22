@@ -12,6 +12,7 @@ struct TesttaskApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                .preferredColorScheme(.light)
         }
     }
 }

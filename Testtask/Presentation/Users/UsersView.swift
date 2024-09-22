@@ -15,7 +15,7 @@ struct UsersView: View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()
-                Text("Working with GET request")
+                Text(String(localized: "UsersView_title"))
                     .font(.nunitoSans(size: 20))
                 Spacer()
             }
@@ -34,7 +34,7 @@ struct UsersView: View {
         if vm.data.isEmpty && !vm.isLoading {
             AdviceView(
                 image: .noUsers,
-                title: "There are no user yet",
+                title: String(localized:"no_users_message"),
                 button: nil
             )
         } else {
@@ -72,11 +72,12 @@ struct UsersView: View {
             // Image
             VStack {
                 AsyncImage(url: item.phoyoURL) { phase in
-                    let emptyImage = Image(.noPhoto)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 50)
-                        .clipShape(Circle())
+                    let emptyImage = EmptyView()
+//                    let emptyImage = Image(.noPhoto)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 50)
+//                        .clipShape(Circle())
                     switch phase {
                     case .empty: emptyImage
                     case .success(let image):

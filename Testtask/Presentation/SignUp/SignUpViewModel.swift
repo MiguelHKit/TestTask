@@ -29,7 +29,7 @@ class SignUpViewModel: ObservableObject {
     @Published var editingHasStarted: Bool = false
     @Published var sendButtonDisabled: Bool = false
     @Published var showSuccessSignedUpModal: Bool = false
-    @Published var serverErroMessage: ErrorMessageItem? = nil
+    @Published var serverErrorMessage: ErrorMessageItem? = nil
     // Loading var
     @Published var isLoading: Bool = false
     @Published var isLoadingPositions: Bool = true
@@ -110,7 +110,7 @@ class SignUpViewModel: ObservableObject {
         self.photoNameErrorMsj = nil
         self.sendButtonDisabled = false
         self.showSuccessSignedUpModal = false
-        self.serverErroMessage = nil
+        self.serverErrorMessage = nil
         self.isLoading = false
         self.isLoadingPositions = true
         self.isLoadingPhoto = false
@@ -178,7 +178,7 @@ class SignUpViewModel: ObservableObject {
             self.isLoading = false
             self.showSuccessSignedUpModal = true
         } catch NetworkError.custom(let message) {
-            self.serverErroMessage = .init(message: message)
+            self.serverErrorMessage = .init(message: message)
             self.isLoading = false
         } catch {
             self.isLoading = false

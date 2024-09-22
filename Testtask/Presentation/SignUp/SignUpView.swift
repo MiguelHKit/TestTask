@@ -34,7 +34,8 @@ struct SignUpView: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var showPhotoConfirmationDialog: Bool = false
-    @State private var showPhotoPicker: Bool = false
+    @State private var openCamera: Bool = false
+    @State private var openGalleryPhotos: Bool = false
     @FocusState var focusedField: SignUpFocusField?
     @Environment(\.dismiss) var dissmissModal
     
@@ -47,15 +48,18 @@ struct SignUpView: View {
         .onChange(of: self.focusedField){ _, newValue in
             vm.editingHasStarted = newValue != nil
         }
-        .confirmationDialog("Choose how you want to add a photo", isPresented: $showPhotoConfirmationDialog, titleVisibility: .visible, actions: {
-            Button("Camera") {
-                
+        .confirmationDialog(String(localized: "dialog_photo_message", defaultValue: "Choose how you want to add a photo"), isPresented: $showPhotoConfirmationDialog, titleVisibility: .visible, actions: {
+            Button(String(localized: "camera")) {
+                self.openCamera = true
             }
-            Button("Gallery") {
-                self.showPhotoPicker = true
+            Button(String(localized: "gallery")) {
+                self.openGalleryPhotos = true
             }
         })
-        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItem, matching: .images)
+        .sheet(isPresented: $openCamera, content: {
+            CameraView()
+        })
+        .photosPicker(isPresented: $openGalleryPhotos, selection: $selectedItem, matching: .images)
         .onChange(of: selectedItem) {
             _,
             newValue in
@@ -78,9 +82,9 @@ struct SignUpView: View {
                content: {
             AdviceView(
                 image: .serverSuccess,
-                title: "User succefully registered",
+                title: String(localized: "user_registered_message", defaultValue: "User succefully registered"),
                 button: .init(
-                    buttonTitle: "Got it",
+                    buttonTitle: String(localized: "got_it"),
                     action: {
                         vm.showSuccessSignedUpModal = false
                         vm.resetView()
@@ -97,20 +101,23 @@ struct SignUpView: View {
                 .padding(.trailing)
             }
         })
-        .fullScreenCover(item: $vm.serverErroMessage, content: { errorServer in
-            AdviceView(
-                image: .serverError,
-                title: errorServer.message,
-                button: .init(
-                    buttonTitle: "Try again",
+        .fullScreenCover(
+            item: $vm.serverErrorMessage,
+            content: { errorServer in
+                AdviceView(
+                    image: .serverError,
+                    title: errorServer.message,
+                    button: .init(
+                        buttonTitle: String(
+                            localized: "try_again"),
                     action: {
-                        vm.serverErroMessage = nil
+                        vm.serverErrorMessage = nil
                     }
                 )
             )
             .overlay(alignment: .topTrailing) {
                 Button("", systemImage: "xmark") {
-                    vm.serverErroMessage = nil
+                    vm.serverErrorMessage = nil
                 }
                 .foregroundStyle(.foreground)
                 .opacity(0.8)
@@ -124,7 +131,7 @@ struct SignUpView: View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()
-                Text("Working with POST request")
+                Text(String(localized: "signUpView_title"))
                     .font(.nunitoSans(size: 20))
                 Spacer()
             }
@@ -137,7 +144,7 @@ struct SignUpView: View {
                     spacing: 30,
                     content: {
                         self.rowTextField(
-                            placeholder: "Your Name",
+                            placeholder: String(localized: "your_name"),
                             value: $vm.name,
                             errorMsg: vm.nameErrorMsj,
                             focusValue: .name
@@ -145,7 +152,7 @@ struct SignUpView: View {
                         .keyboardType(.alphabet)
                         .onSubmit { self.focusedField = .email }
                         self.rowTextField(
-                            placeholder: "Email",
+                            placeholder: String(localized: "email"),
                             value: $vm.email,
                             errorMsg: vm.emailErrorMsj,
                             focusValue: .email
@@ -153,7 +160,7 @@ struct SignUpView: View {
                         .onSubmit { self.focusedField = .phone }
                         .keyboardType(.emailAddress)
                         self.rowTextField(
-                            placeholder: "Phone",
+                            placeholder: String(localized: "phone"),
                             value: $vm.phone,
                             errorMsg: vm.phoneErrorMsj,
                             focusValue: .phone,
@@ -174,16 +181,16 @@ struct SignUpView: View {
                             RadioSingleSelectionView(
                                 selectedId: $vm.positionSelection,
                                 items: vm.positionOptions,
-                                titleLabel: "Select your position"
+                                titleLabel: String(localized: "select_your_position")
                             )
                         }
                         //
                         self.rowPhoto(
-                            placeholder: "Upload your photo",
+                            placeholder: String(localized: "upload_your_photo", defaultValue: "Upload your photo"),
                             value: $vm.photo,
                             errorMsg: vm.photoNameErrorMsj,
                             uploadAction: {
-                                self.showPhotoPicker = true
+                                self.showPhotoConfirmationDialog = true
                             },
                             xmarkAction: {
                                 vm.photo = nil
@@ -193,7 +200,7 @@ struct SignUpView: View {
                 })
                 .padding()
                 //Button
-                Button("Sign up") {
+                Button(String(localized: "sign_up")) {
                     Task(operation: vm.submit)
                 }
                 .padding(.bottom)
@@ -287,7 +294,7 @@ struct SignUpView: View {
                         .font(.nunitoSans(weight: .light))
                         .foregroundColor(tint)
                     Spacer()
-                    Button("Upload", action: uploadAction)
+                    Button(String(localized: "upload"), action: uploadAction)
                         .buttonStyle(.appSecondaryTextButtonStyle)
 //                    .padding(.trailing)
                 }

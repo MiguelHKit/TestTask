@@ -16,6 +16,7 @@
 		8425180A2C98B976002B6CA4 /* HideKeyboardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */; };
 		8425180C2C98B99F002B6CA4 /* UIAplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8425180B2C98B99F002B6CA4 /* UIAplication.swift */; };
 		8425180E2C98C9A4002B6CA4 /* DisableWhenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */; };
+		8432B1932C9FA0F7007A7CD0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8432B1922C9FA0F7007A7CD0 /* Localizable.xcstrings */; };
 		8445BC032C9496DD0079E4AC /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC022C9496DD0079E4AC /* Print.swift */; };
 		8445BC052C94A4C00079E4AC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445BC042C94A4C00079E4AC /* String.swift */; };
 		846B93D02C9F226000146194 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846B93CF2C9F226000146194 /* NetworkMonitor.swift */; };
@@ -46,6 +47,7 @@
 		842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideKeyboardModifier.swift; sourceTree = "<group>"; };
 		8425180B2C98B99F002B6CA4 /* UIAplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAplication.swift; sourceTree = "<group>"; };
 		8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableWhenModifier.swift; sourceTree = "<group>"; };
+		8432B1922C9FA0F7007A7CD0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8445BC022C9496DD0079E4AC /* Print.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
 		8445BC042C94A4C00079E4AC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		846B93CF2C9F226000146194 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
@@ -72,6 +74,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8432B18F2C9F966D007A7CD0 /* Button */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Button; sourceTree = "<group>"; };
 		8432B1902C9F9678007A7CD0 /* TextField */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TextField; sourceTree = "<group>"; };
+		8432B1942C9FAEB8007A7CD0 /* Representables */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Representables; sourceTree = "<group>"; };
+		8432B1982C9FB193007A7CD0 /* CacheManager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CacheManager; sourceTree = "<group>"; };
 		846B93D12C9F6A0900146194 /* Main */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Main; sourceTree = "<group>"; };
 		846B93D42C9F82B200146194 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		849FD5482C9A82D8008D8783 /* SignUp */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SignUp; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 		84171AFC2C9240EC00089B06 /* Usable */ = {
 			isa = PBXGroup;
 			children = (
+				8432B1942C9FAEB8007A7CD0 /* Representables */,
 				846B93D42C9F82B200146194 /* Resources */,
 				846CA0F02C98024100692144 /* Modifiers */,
 				846CA0EF2C97BCA400692144 /* Managers */,
@@ -187,6 +192,7 @@
 		846CA0EF2C97BCA400692144 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				8432B1982C9FB193007A7CD0 /* CacheManager */,
 				847E10092C98A4A4004AA54A /* NetworkManager */,
 			);
 			path = Managers;
@@ -249,6 +255,7 @@
 				84AB9C842C911A3000CDE749 /* Presentation */,
 				84AB9C792C911A1E00CDE749 /* Assets.xcassets */,
 				84AB9C7C2C911A1E00CDE749 /* Preview Content */,
+				8432B1922C9FA0F7007A7CD0 /* Localizable.xcstrings */,
 			);
 			path = Testtask;
 			sourceTree = "<group>";
@@ -315,6 +322,8 @@
 			fileSystemSynchronizedGroups = (
 				8432B18F2C9F966D007A7CD0 /* Button */,
 				8432B1902C9F9678007A7CD0 /* TextField */,
+				8432B1942C9FAEB8007A7CD0 /* Representables */,
+				8432B1982C9FB193007A7CD0 /* CacheManager */,
 				846B93D12C9F6A0900146194 /* Main */,
 				846B93D42C9F82B200146194 /* Resources */,
 				849FD5482C9A82D8008D8783 /* SignUp */,
@@ -364,6 +373,7 @@
 			files = (
 				84171AEE2C921E8800089B06 /* Launch Screen.storyboard in Resources */,
 				84AB9C7E2C911A1E00CDE749 /* Preview Assets.xcassets in Resources */,
+				8432B1932C9FA0F7007A7CD0 /* Localizable.xcstrings in Resources */,
 				84AB9C7A2C911A1E00CDE749 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +472,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -516,6 +527,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -533,7 +545,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Testtask/Info.plist;
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -542,8 +553,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -552,7 +563,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = yepiyepi.Testtask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -573,7 +585,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Testtask/Info.plist;
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -582,8 +593,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -592,7 +603,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = yepiyepi.Testtask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

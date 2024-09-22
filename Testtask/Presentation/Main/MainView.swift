@@ -21,23 +21,25 @@ struct MainView: View {
             // Users View
             UsersView()
                 .tag(TabSelection.users)
-                .tabItem { Label("Users", systemImage: "person.3.sequence.fill") }
+                .tabItem { Label(String(localized: "users") , systemImage: "person.3.sequence.fill") }
             // SignUpView
             SignUpView()
                 .tag(TabSelection.signUp)
-                .tabItem { Label("Sign Up", systemImage: "person.crop.circle.fill.badge.plus") }
+                .tabItem { Label(String(localized: "sign_up"), systemImage: "person.crop.circle.fill.badge.plus") }
         }
         .tint(.appSecondary)
-//        .fullScreenCover(isPresented: $vm.isNotConected) {
-//            AdviceView(
-//                image: .noConection,
-//                title: "There is no internet conection",
-//                button: .init(
-//                    buttonTitle: "Try again",
-//                    action: vm.retry
-//                )
-//            )
-//        }
+        .fullScreenCover(isPresented: $vm.isNotConected) {
+            AdviceView(
+                image: .noConection,
+                title: String(
+                    localized: "no_conection_message"),
+                button: .init(
+                    buttonTitle: String(
+                        localized: "try_again"),
+                    action: vm.retry
+                )
+            )
+        }
     }
 }
 

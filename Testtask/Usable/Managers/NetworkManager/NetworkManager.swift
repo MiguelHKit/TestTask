@@ -46,6 +46,7 @@ class NetworkManager {
         }
         // Configuration
         let configuration = URLSessionConfiguration.default
+//        configuration.requestCachePolicy
         let session = URLSession(configuration: configuration)
         // MAKING THE RESQUEST
         let (data, rawResponse) = try await session.data(for: request)
