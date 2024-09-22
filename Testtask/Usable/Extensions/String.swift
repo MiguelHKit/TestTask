@@ -30,7 +30,7 @@ extension String {
         
         var result = ""
         var startIndex = cleanNumber.startIndex
-        var endIndex = cleanNumber.endIndex
+        let endIndex = cleanNumber.endIndex
         
         for char in mask where startIndex < endIndex {
             if char == "X" {

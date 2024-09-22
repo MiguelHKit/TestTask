@@ -13,6 +13,7 @@ struct UsersView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            // Top title
             HStack {
                 Spacer()
                 Text(String(localized: "UsersView_title"))
@@ -22,11 +23,12 @@ struct UsersView: View {
             .padding(.vertical)
             .background(.appPrimary)
             .clipped()
+            // list of users
             self.listView
         }
         .task(vm.onAppearTask)
         .refreshable(action: vm.onAppearTask)
-        .loading(isLoading: vm.isLoading, isOpaque: true)
+        .loading(isLoading: vm.isLoading, isOpaque: false)
     }
     
     @ViewBuilder
@@ -39,10 +41,11 @@ struct UsersView: View {
             )
         } else {
             List(vm.data, id: \.self) { item in
+                // Row for display each user
                 self.rowView(item: item)
                     .listRowSeparator(.hidden, edges: .top)
                     .listRowSeparator(vm.data.last == item ? .hidden : .visible)
-                // Progress to load pagination
+                // ProgressView to load pagination
                 if vm.data.last == item && vm.hasMore {
                     HStack {
                         Spacer()
@@ -58,6 +61,7 @@ struct UsersView: View {
                     .padding(.bottom, 20)
                     .listRowSeparator(.hidden)
                     .task {
+                        // Load more when progresView appears
                         try? await Task.sleep(for: .seconds(1))
                         await vm.getUsers()
                     }
@@ -67,30 +71,31 @@ struct UsersView: View {
         }
     }
     @ViewBuilder
+    var placeholderImage: some View {
+        Image(.noPhoto)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 50)
+            .clipShape(Circle())
+    }
+    @ViewBuilder
     func rowView(item: UserModel) -> some View {
         HStack(spacing: 15) {
             // Image
             VStack {
                 AsyncImage(url: item.phoyoURL) { phase in
-                    let emptyImage = EmptyView()
-//                    let emptyImage = Image(.noPhoto)
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-//                        .frame(width: 50)
-//                        .clipShape(Circle())
                     switch phase {
-                    case .empty: emptyImage
+                    case .empty: placeholderImage
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50)
                             .clipShape(Circle())
-                    case .failure(_): emptyImage
-                    @unknown default: emptyImage
+                    case .failure(_): placeholderImage
+                    @unknown default: placeholderImage
                     }
                 }
-                
                 Spacer()
             }
             // Content

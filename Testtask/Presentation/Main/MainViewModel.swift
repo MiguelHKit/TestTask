@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-class MainViewModel:ObservableObject {
+@MainActor
+class MainViewModel: ObservableObject {
     @Published var isNotConected: Bool = false
     private var monitoringTask: Task<Void, Never>?
     var cancellables: Set<AnyCancellable> = []

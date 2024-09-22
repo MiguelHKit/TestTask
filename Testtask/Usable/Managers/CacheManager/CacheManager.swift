@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor 
 class CacheManager {
     static let shared = NSCache<NSString, UIImage>()
     

@@ -8,14 +8,14 @@
 import Foundation
 import Combine
 
-class NetworkManager {
+actor NetworkManager {
     private static let instance = NetworkManager()
-    private let connectivityMonitor = NetworkMonitor.instance
+    private nonisolated let connectivityMonitor = NetworkMonitor.instance
     //GENERAL CONFIGURATION
-    static let IS_PRODUCTION: Bool = false
-    static let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
+    static nonisolated let IS_PRODUCTION: Bool = false
+    static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
 //    public var printLogs: Bool = false
-    public var printLogs: Bool = true
+    public nonisolated let printLogs: Bool = true
     private init() { }
     
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
@@ -61,7 +61,7 @@ class NetworkManager {
             🛸[Request Headers]: \(String(describing: request.allHTTPHeaderFields))
             🛩️[RESPONSE]: \(getPrettyJSONString(data))
         """
-        if await Self.instance.printLogs {
+        if Self.instance.printLogs {
             log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW SERVICE CALL]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
             log(responseDescription)
         }
@@ -111,13 +111,11 @@ class NetworkManager {
         )
     }
     // Monitoring
-    private func stopMonitoring() {
+    private nonisolated func stopMonitoring() {
         Task {
-            self.connectivityMonitor.cancelMonitoring() // Cancelar el actor
+            await self.connectivityMonitor.cancelMonitoring() // Cancelar el actor
         }
     }
     
-    deinit {
-        stopMonitoring()
-    }
+    deinit { stopMonitoring() }
 }

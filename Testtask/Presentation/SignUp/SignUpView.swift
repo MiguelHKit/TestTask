@@ -57,7 +57,8 @@ struct SignUpView: View {
             }
         })
         .sheet(isPresented: $openCamera, content: {
-            CameraView()
+            EmptyView()
+//            CameraView()
         })
         .photosPicker(isPresented: $openGalleryPhotos, selection: $selectedItem, matching: .images)
         .onChange(of: selectedItem) {

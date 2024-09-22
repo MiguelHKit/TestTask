@@ -13,7 +13,7 @@ class UsersViewModel: ObservableObject {
     @Published var isLoading: Bool = true
     @Published var isLoadingPagination: Bool = true
     @Published var page: Int = 0
-    @Published var pageSize: Int = 10
+    @Published var pageSize: Int = 6
     @Published var hasMore: Bool = false
     var userServices: UserServices = .init()
     
@@ -48,7 +48,6 @@ class UsersViewModel: ObservableObject {
             self.isLoading = false
         } catch {
             self.isLoading = false
-            print("getUsers: \(error)")
         }
     }
 }
