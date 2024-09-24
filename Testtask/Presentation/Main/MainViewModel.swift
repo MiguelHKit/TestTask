@@ -14,13 +14,15 @@ class MainViewModel: ObservableObject {
     private var monitoringTask: Task<Void, Never>?
     var cancellables: Set<AnyCancellable> = []
     init() {
-        NetworkMonitor.instance.$isConnected
+        NetworkMonitor.observable.$isConnected
             .receive(on: RunLoop.main)
             .map { !$0 } //convert isConected to isNotConected
             .assign(to: \.isNotConected, on: self)
             .store(in: &cancellables)
     }
     func retry() {
-        NetworkMonitor.instance.retry()
+        Task {
+            await NetworkMonitor.instance.retry()            
+        }
     }
 }

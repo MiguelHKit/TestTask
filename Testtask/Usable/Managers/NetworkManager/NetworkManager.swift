@@ -10,7 +10,7 @@ import Combine
 
 actor NetworkManager {
     private static let instance = NetworkManager()
-    private nonisolated let connectivityMonitor = NetworkMonitor.instance
+    private let connectivityMonitor = NetworkMonitor.instance
     //GENERAL CONFIGURATION
     static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"

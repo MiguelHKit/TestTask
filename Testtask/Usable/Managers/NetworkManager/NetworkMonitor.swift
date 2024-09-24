@@ -7,18 +7,30 @@
 
 import Foundation
 import Network
+import Combine
 
-@MainActor
-class NetworkMonitor: ObservableObject {
-    @Published var isConnected: Bool = false
+class NetworkMonitorObservable {
+    @Published var isConnected: Bool = true
+    let subject = PassthroughSubject<Bool, Never>()
+    var cancellables: Set<AnyCancellable> = []
+    
+    init() {
+        self.subject.sink { [weak self] value in
+            self?.isConnected = value
+        }.store(in: &cancellables)
+    }
+}
+
+actor NetworkMonitor {
     static let instance: NetworkMonitor = NetworkMonitor()
     private var monitor: NWPathMonitor?
+    static let observable: NetworkMonitorObservable = .init()
     
     private init() {
         Task { await self.start() }
     }
     
-    private func start() async {
+    private func start() {
         monitor = NWPathMonitor()
         let queue = DispatchQueue(label: "Monitor")
         monitor?.start(queue: queue)
@@ -30,11 +42,11 @@ class NetworkMonitor: ObservableObject {
         }
     }
     private func updateConnectionStatus(isConnected: Bool) async {
-        self.isConnected = isConnected
+        Self.observable.subject.send(isConnected)
     }
     func retry() {
-        monitor?.cancel()
-        Task { await self.start() }
+        self.monitor?.cancel()
+        self.start()
     }
     func cancelMonitoring() {
         monitor?.cancel()

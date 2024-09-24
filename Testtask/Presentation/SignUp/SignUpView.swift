@@ -57,8 +57,16 @@ struct SignUpView: View {
             }
         })
         .sheet(isPresented: $openCamera, content: {
-            EmptyView()
-//            CameraView()
+//            EmptyView()
+            CameraView { imageCaptured in
+                guard let jpegData = imageCaptured.jpegData(compressionQuality: 1) else { return }
+                let fileSize = imageCaptured.sizeInMB()
+                self.vm.photo = .init(
+                    uiImage: imageCaptured,
+                    jpegData: jpegData,
+                    fileSize: fileSize
+                )
+            }
         })
         .photosPicker(isPresented: $openGalleryPhotos, selection: $selectedItem, matching: .images)
         .onChange(of: selectedItem) {
