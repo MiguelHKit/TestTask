@@ -36,45 +36,57 @@ class SignUpViewModel: ObservableObject {
     @Published var isLoadingPhoto: Bool = false
     private var services: UserServices = .init()
     private var cancellables = Set<AnyCancellable>()
-    
+    // MARK: - Init
     init() {
-        // Listen to this field changes
+        // Listen to fields for validation:
         self.$name
+            .receive(on: DispatchQueue.global(qos: .userInteractive))
             .drop(while: { [weak self] _ in
                 self?.editingHasStarted == false
             })
-            .sink { [weak self] in
-                self?.nameErrorMsj = self?.validateName($0)
-            }.store(in: &cancellables)
+            .map { self.validateName($0) }
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.nameErrorMsj, on: self)
+            .store(in: &cancellables)
         self.$email
+            .receive(on: DispatchQueue.global(qos: .userInteractive))
             .drop(while: { [weak self] _ in
                 self?.editingHasStarted == false
             })
-            .sink { [weak self] in
-                self?.emailErrorMsj = self?.validateEmail($0)
-            }.store(in: &cancellables)
+            .receive(on: DispatchQueue.main)
+            .map { self.validateEmail($0) }
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.emailErrorMsj, on: self)
+            .store(in: &cancellables)
         self.$phone
+            .receive(on: DispatchQueue.global(qos: .userInteractive))
             .drop(while: { [weak self] _ in
                 self?.editingHasStarted == false
             })
-            .sink { [weak self] in
-                self?.phoneErrorMsj = self?.validatePhone($0)
-            }.store(in: &cancellables)
+            .map { self.validatePhone($0) }
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.phoneErrorMsj, on: self)
+            .store(in: &cancellables)
         self.$photo
+            .receive(on: DispatchQueue.global(qos: .userInitiated))
             .drop(while: { [weak self] _ in
                 self?.editingHasStarted == false
             })
-            .sink { [weak self] in
+            .map {
                 guard
                     let image = $0?.uiImage,
                     image.jpegData(compressionQuality: 1) != nil
-                else { self?.photoNameErrorMsj = "Photo is required"; return }
-                self?.photoNameErrorMsj = nil
-            }.store(in: &cancellables)
+                else { return "Photo is required" }
+                return nil
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.photoNameErrorMsj, on: self)
+            .store(in: &cancellables)
         // Cndition for enabling submit button
         self.$positionSelection.sink { [weak self] in
             self?.sendButtonDisabled = $0 == nil
-        }.store(in: &cancellables)
+        }
+        .store(in: &cancellables)
     }
     // MARK: - Validation
     func validateName(_ name: String) -> String? {
@@ -116,7 +128,7 @@ class SignUpViewModel: ObservableObject {
         self.isLoadingPhoto = false
         Task { await self.getPositions() }
     }
-    // MARK: - Service
+    // MARK: - Services
     @Sendable
     func getPositions() async {
         do {

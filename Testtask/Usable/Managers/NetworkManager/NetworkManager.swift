@@ -15,7 +15,7 @@ actor NetworkManager {
     static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
 //    public var printLogs: Bool = false
-    public nonisolated let printLogs: Bool = true
+    public nonisolated let printLogs: Bool = false
     private init() { }
     
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
@@ -39,7 +39,6 @@ actor NetworkManager {
         request.httpMethod = req.method.rawValue
         //Add Body
         request.httpBody = try req.body.encodedAsData()
-        print("[Request body]: \(String(describing: String(data: request.httpBody ?? Data(), encoding: .utf8)))")
         //Add headers
         req.headers.forEach {
             request.addValue($0.getValue(), forHTTPHeaderField: $0.getKey())

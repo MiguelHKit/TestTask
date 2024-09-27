@@ -27,7 +27,7 @@ enum SignUpFocusField {
     case email
     case phone
 }
-
+// MARK: View
 struct SignUpView: View {
     @StateObject var vm: SignUpViewModel = .init()
     //
@@ -135,6 +135,7 @@ struct SignUpView: View {
             }
         })
     }
+    // MARK: MainView
     @ViewBuilder
     var mainView: some View {
         VStack(spacing: 0) {
@@ -156,27 +157,26 @@ struct SignUpView: View {
                             placeholder: String(localized: "your_name"),
                             value: $vm.name,
                             errorMsg: vm.nameErrorMsj,
-                            focusValue: .name
+                            focusValue: .name,
+                            nextFocusValue: .email,
+                            keyboardType: .alphabet
                         )
-                        .keyboardType(.alphabet)
-                        .onSubmit { self.focusedField = .email }
                         self.rowTextField(
                             placeholder: String(localized: "email"),
                             value: $vm.email,
                             errorMsg: vm.emailErrorMsj,
-                            focusValue: .email
+                            focusValue: .email,
+                            nextFocusValue: .phone,
+                            keyboardType: .emailAddress
                         )
-                        .onSubmit { self.focusedField = .phone }
-                        .keyboardType(.emailAddress)
                         self.rowTextField(
                             placeholder: String(localized: "phone"),
                             value: $vm.phone,
                             errorMsg: vm.phoneErrorMsj,
                             focusValue: .phone,
+                            keyboardType: .phonePad,
                             footer: "+38 (XXX) XXX - XX - XX"
                         )
-                        .keyboardType(.phonePad)
-                        .onSubmit { self.focusedField = nil }
                         .onChange(of: vm.phone) { _, newValue in
                             vm.phone = newValue.formatPhoneNumber()
                         }
@@ -218,8 +218,9 @@ struct SignUpView: View {
             }
         }
     }
+    // MARK: rowTextField
     @ViewBuilder
-    func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?, focusValue: SignUpFocusField? = nil, footer: String? = nil) -> some View {
+    func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?, focusValue: SignUpFocusField? = nil, nextFocusValue: SignUpFocusField? = nil,keyboardType: UIKeyboardType = .default, footer: String? = nil) -> some View {
         let tint: Color = errorMsg == nil ? .gray : .red
         let hasText: Bool = value.wrappedValue.isNotEmpty
         VStack(spacing: 10) {
@@ -257,8 +258,14 @@ struct SignUpView: View {
                                 .font(.nunitoSans(size: 13, weight: .semibold))
                         }
                     }
+                    .keyboardType(keyboardType)
+                    .onSubmit {
+                        self.focusedField = nextFocusValue
+                    }
             }
-            .onTapGesture { self.focusedField = focusValue }
+            .simultaneousGesture(TapGesture().onEnded({ _ in
+                self.focusedField = focusValue
+            }))
             if let errorMsg {
                 HStack {
                     Text(errorMsg)
@@ -280,6 +287,7 @@ struct SignUpView: View {
             }
         }
     }
+    // MARK: rowPhoto
     @ViewBuilder
     func rowPhoto(placeholder: String, value: Binding<ImageData?>, errorMsg: String?, uploadAction: @escaping () -> Void, xmarkAction: @escaping () -> Void) -> some View {
         let tint: Color = errorMsg == nil ? .gray : .red

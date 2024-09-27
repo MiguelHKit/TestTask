@@ -63,7 +63,7 @@ struct UsersView: View {
                     .task {
                         // Load more when progresView appears
                         try? await Task.sleep(for: .seconds(1))
-                        await vm.getUsers()
+                        await vm.onAppearTask()
                     }
                 }
             }
