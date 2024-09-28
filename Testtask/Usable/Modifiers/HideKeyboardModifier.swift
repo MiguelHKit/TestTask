@@ -11,7 +11,9 @@ import UIKit
 struct HideKeyboardModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .simultaneousGesture(TapGesture().onEnded(KeyboardManager.shared.hideKeyboard))
+            .onTapGesture {
+                KeyboardManager.shared.hideKeyboard()
+            }
     }
 }
 

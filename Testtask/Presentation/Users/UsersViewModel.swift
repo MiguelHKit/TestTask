@@ -42,7 +42,7 @@ class UsersViewModel: ObservableObject {
                 role: $0.position.unwrap(),
                 email: $0.email.unwrap(),
                 phoneNumber: $0.phone.unwrap(),
-                phoyoURL: URL(string: $0.photo.unwrap())
+                phoyoURL: URL(string: $0.photo ?? "")
             )
         }
         //

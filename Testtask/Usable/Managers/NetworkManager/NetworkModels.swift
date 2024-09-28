@@ -38,5 +38,4 @@ struct NetworkResponse {
     let data: Data
     //    let cookies:
     //    let headers:
-    let description: String
 }

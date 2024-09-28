@@ -26,7 +26,6 @@ class SignUpViewModel: ObservableObject {
     @Published var photo: ImageData? = nil
     @Published var photoNameErrorMsj: String? = nil
     //
-    @Published var editingHasStarted: Bool = false
     @Published var sendButtonDisabled: Bool = false
     @Published var showSuccessSignedUpModal: Bool = false
     @Published var serverErrorMessage: ErrorMessageItem? = nil
@@ -41,37 +40,28 @@ class SignUpViewModel: ObservableObject {
         // Listen to fields for validation:
         self.$name
             .receive(on: DispatchQueue.global(qos: .userInteractive))
-            .drop(while: { [weak self] _ in
-                self?.editingHasStarted == false
-            })
+            .drop(while: { $0.isEmpty })
             .map { self.validateName($0) }
             .receive(on: DispatchQueue.main)
             .assign(to: \.nameErrorMsj, on: self)
             .store(in: &cancellables)
         self.$email
             .receive(on: DispatchQueue.global(qos: .userInteractive))
-            .drop(while: { [weak self] _ in
-                self?.editingHasStarted == false
-            })
-            .receive(on: DispatchQueue.main)
+            .drop(while: { $0.isEmpty })
             .map { self.validateEmail($0) }
             .receive(on: DispatchQueue.main)
             .assign(to: \.emailErrorMsj, on: self)
             .store(in: &cancellables)
         self.$phone
             .receive(on: DispatchQueue.global(qos: .userInteractive))
-            .drop(while: { [weak self] _ in
-                self?.editingHasStarted == false
-            })
+            .drop(while: { $0.isEmpty })
             .map { self.validatePhone($0) }
             .receive(on: DispatchQueue.main)
             .assign(to: \.phoneErrorMsj, on: self)
             .store(in: &cancellables)
         self.$photo
             .receive(on: DispatchQueue.global(qos: .userInitiated))
-            .drop(while: { [weak self] _ in
-                self?.editingHasStarted == false
-            })
+            .drop(while: { $0 == nil })
             .map {
                 guard
                     let image = $0?.uiImage,
@@ -101,7 +91,6 @@ class SignUpViewModel: ObservableObject {
         return phone.isEmpty ? "Required field" : nil
     }
     func validateUser() {
-        self.editingHasStarted = true
         // Trigger again validation listeners
         self.name = self.name
         self.email = self.email
@@ -110,7 +99,6 @@ class SignUpViewModel: ObservableObject {
         self.photo = self.photo
     }
     func resetView() {
-        self.editingHasStarted = false
         self.name = ""
         self.nameErrorMsj = nil
         self.email = ""
@@ -185,7 +173,6 @@ class SignUpViewModel: ObservableObject {
                 self.emailErrorMsj = registrationResponse.fails?.email?.mapToErrorMsj()
                 self.phoneErrorMsj = registrationResponse.fails?.phone?.mapToErrorMsj()
                 self.photoNameErrorMsj = registrationResponse.fails?.photo?.mapToErrorMsj()
-                self.editingHasStarted = false // Reset edit status
                 throw NetworkError.custom(message: registrationResponse.message.unwrap())
             }
             // success

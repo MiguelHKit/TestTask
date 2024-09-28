@@ -10,7 +10,6 @@ import Combine
 
 actor NetworkManager {
     private static let instance = NetworkManager()
-    private let connectivityMonitor = NetworkMonitor.instance
     //GENERAL CONFIGURATION
 //    static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
@@ -52,15 +51,15 @@ actor NetworkManager {
             throw NetworkError.invalidResponse
         }
         //Printing Values
-        let responseDescription = """
-            ⚔️[Method]: \(request.httpMethod ?? "UNKNOWN")
-            ⚔️[Status]: \(response.statusCode)
-            📡[URL]: \(request.url?.absoluteString ?? "INVALID URL")
-            🛸[Request Headers]: \(String(describing: request.allHTTPHeaderFields))
-            🛩️[RESPONSE]: \(getPrettyJSONString(data))
-        """
         if Self.instance.printLogs {
             log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW SERVICE CALL]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
+            let responseDescription = """
+                ⚔️[Method]: \(request.httpMethod ?? "UNKNOWN")
+                ⚔️[Status]: \(response.statusCode)
+                📡[URL]: \(request.url?.absoluteString ?? "INVALID URL")
+                🛸[Request Headers]: \(String(describing: request.allHTTPHeaderFields))
+                🛩️[RESPONSE]: \(getPrettyJSONString(data))
+            """
             log(responseDescription)
         }
         //
@@ -68,8 +67,7 @@ actor NetworkManager {
             status: response.statusCode,
             time: 1,
             size: rawResponse.expectedContentLength,
-            data: data,
-            description: responseDescription
+            data: data
         )
     }
     /// Make a request using a NetwortRequest and returning a Codable Model
@@ -113,7 +111,7 @@ actor NetworkManager {
     // Monitoring
     private nonisolated func stopMonitoring() {
         Task {
-            await self.connectivityMonitor.cancelMonitoring() // cancel the actor
+            await NetworkMonitor.instance.cancelMonitoring() // cancel the actor
         }
     }
     

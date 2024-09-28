@@ -10,7 +10,7 @@ struct SecondaryTextButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         if configuration.isPressed {
             configuration.label
-                .font(.nunitoSans(size: 18))
+                .font(.nunitoSans(size: 18, weight: .semibold))
                 .foregroundStyle(.appSecondary)
                 .padding(10)
                 .background(.appSecondary.opacity(0.1))

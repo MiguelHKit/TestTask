@@ -26,6 +26,21 @@ enum SignUpFocusField {
     case name
     case email
     case phone
+    
+    func setNext() -> SignUpFocusField? {
+        return switch self {
+        case .name: .email
+        case .email: .phone
+        case .phone: nil
+        }
+    }
+    func setPrevious() -> SignUpFocusField? {
+        switch self {
+        case .name: nil
+        case .email: .name
+        case .phone: .email
+        }
+    }
 }
 // MARK: View
 struct SignUpView: View {
@@ -45,9 +60,6 @@ struct SignUpView: View {
         .animation(.easeIn, value: vm.isLoadingPositions)
         .loading(isLoading: vm.isLoading)
         .hideKeyboardOnTap()
-        .onChange(of: self.focusedField){ _, newValue in
-            vm.editingHasStarted = newValue != nil
-        }
         .confirmationDialog(String(localized: "dialog_photo_message", defaultValue: "Choose how you want to add a photo"), isPresented: $showPhotoConfirmationDialog, titleVisibility: .visible, actions: {
             Button(String(localized: "camera")) {
                 self.openCamera = true
@@ -61,7 +73,7 @@ struct SignUpView: View {
             CameraView { imageCaptured in
                 guard let jpegData = imageCaptured.jpegData(compressionQuality: 1) else { return }
                 let fileSize = imageCaptured.sizeInMB()
-                self.vm.photo = .init(
+                vm.photo = .init(
                     uiImage: imageCaptured,
                     jpegData: jpegData,
                     fileSize: fileSize
@@ -80,11 +92,24 @@ struct SignUpView: View {
                     let jpegData = uiImage.jpegData(compressionQuality: 1)
                 else { return }
                 let fileSize = uiImage.sizeInMB()
-                self.vm.photo = .init(
+                vm.photo = .init(
                     uiImage: uiImage,
                     jpegData: jpegData,
                     fileSize: fileSize
                 )
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                HStack {
+                    Spacer()
+                    Button("", systemImage: "chevron.up") {
+                        focusedField = focusedField?.setPrevious()
+                    }
+                    Button("", systemImage: "chevron.down") {
+                        focusedField = focusedField?.setNext()
+                    }
+                }
             }
         }
         .fullScreenCover(isPresented: $vm.showSuccessSignedUpModal,
@@ -150,7 +175,6 @@ struct SignUpView: View {
                             value: $vm.name,
                             errorMsg: vm.nameErrorMsj,
                             focusValue: .name,
-                            nextFocusValue: .email,
                             keyboardType: .alphabet
                         )
                         self.rowTextField(
@@ -158,7 +182,6 @@ struct SignUpView: View {
                             value: $vm.email,
                             errorMsg: vm.emailErrorMsj,
                             focusValue: .email,
-                            nextFocusValue: .phone,
                             keyboardType: .emailAddress
                         )
                         self.rowTextField(
@@ -212,7 +235,7 @@ struct SignUpView: View {
     }
     // MARK: rowTextField
     @ViewBuilder
-    func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?, focusValue: SignUpFocusField? = nil, nextFocusValue: SignUpFocusField? = nil,keyboardType: UIKeyboardType = .default, footer: String? = nil) -> some View {
+    func rowTextField(placeholder: String, value: Binding<String>, errorMsg: String?, focusValue: SignUpFocusField? = nil,keyboardType: UIKeyboardType = .default, footer: String? = nil) -> some View {
         let tint: Color = errorMsg == nil ? .gray : .red
         let hasText: Bool = value.wrappedValue.isNotEmpty
         VStack(spacing: 10) {
@@ -250,14 +273,10 @@ struct SignUpView: View {
                                 .font(.nunitoSans(size: 13, weight: .semibold))
                         }
                     }
+                    .onTapGesture { focusedField = focusValue }
                     .keyboardType(keyboardType)
-                    .onSubmit {
-                        self.focusedField = nextFocusValue
-                    }
+                    .onSubmit { focusedField = focusedField?.setNext() }
             }
-            .simultaneousGesture(TapGesture().onEnded({ _ in
-                self.focusedField = focusValue
-            }))
             if let errorMsg {
                 HStack {
                     Text(errorMsg)
@@ -305,7 +324,6 @@ struct SignUpView: View {
                     Spacer()
                     Button(String(localized: "upload"), action: uploadAction)
                         .buttonStyle(.appSecondaryTextButtonStyle)
-//                    .padding(.trailing)
                 }
             }
             .padding(.horizontal,15)
