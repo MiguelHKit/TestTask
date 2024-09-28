@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct LoadingView: View {
     var isOpaque: Bool
     

@@ -32,7 +32,7 @@ final class UsersViewModelTest: XCTestCase {
     }
 
     func test_services_areWorking() {
-        let expectation = XCTestExpectation(description: "Check if network call works")
+        let expectation = XCTestExpectation(description: "Check if network data works")
         Task { @MainActor in
             let vm = UsersViewModel()
             do {

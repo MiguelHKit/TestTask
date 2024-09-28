@@ -137,13 +137,15 @@ class SignUpViewModel: ObservableObject {
             else { throw NetworkError.custom(message: response.message.unwrap()) }
             // success, array to dictionary
             self.positionOptions = Dictionary(
-                uniqueKeysWithValues: response.positions.compactMap {
-                    guard
-                        let id = $0?.id,
-                        let name = $0?.name
-                    else { return nil }
-                    return (id, name)
-                }
+                uniqueKeysWithValues: response.positions
+                    .compactMap {
+                        guard
+                            let id = $0?.id,
+                            let name = $0?.name
+                        else { return nil }
+                        return (id, name)
+                    }
+                    .sorted(by: { $0.1 > $1.1 })
             )
             self.isLoadingPositions = false
         } catch {

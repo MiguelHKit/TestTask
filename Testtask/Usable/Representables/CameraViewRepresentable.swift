@@ -10,7 +10,6 @@ import UIKit
 import AVFoundation
 
 struct CameraView: UIViewControllerRepresentable {
-//    @Binding var image: UIImage?
     var didCaptureImage: (UIImage) -> Void
     var sourceType: UIImagePickerController.SourceType = .camera
 

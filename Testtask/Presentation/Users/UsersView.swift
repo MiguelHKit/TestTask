@@ -14,23 +14,15 @@ struct UsersView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Top title
-            HStack {
-                Spacer()
-                Text(String(localized: "UsersView_title"))
-                    .font(.nunitoSans(size: 20))
-                Spacer()
-            }
-            .padding(.vertical)
-            .background(.appPrimary)
-            .clipped()
-            // list of users
+            TopTitleView(title: String(localized: "UsersView_title"))
+            // List of users
             self.listView
         }
         .task(vm.onAppearTask)
         .refreshable(action: vm.onAppearTask)
         .loading(isLoading: vm.isLoading, isOpaque: false)
     }
-    
+    // MARK: ListView
     @ViewBuilder
     var listView: some View {
         if vm.data.isEmpty && !vm.isLoading {
@@ -45,7 +37,7 @@ struct UsersView: View {
                 self.rowView(item: item)
                     .listRowSeparator(.hidden, edges: .top)
                     .listRowSeparator(vm.data.last == item ? .hidden : .visible)
-                // ProgressView to load pagination
+                // ProgressView for loading pagination
                 if vm.data.last == item && vm.hasMore {
                     HStack {
                         Spacer()
@@ -70,6 +62,7 @@ struct UsersView: View {
             .listStyle(.plain)
         }
     }
+    // MARK: placeholderImage
     @ViewBuilder
     var placeholderImage: some View {
         Image(.noPhoto)
@@ -78,6 +71,7 @@ struct UsersView: View {
             .frame(width: 50)
             .clipShape(Circle())
     }
+    // MARK: RowView
     @ViewBuilder
     func rowView(item: UserModel) -> some View {
         HStack(spacing: 15) {

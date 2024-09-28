@@ -7,10 +7,9 @@
 
 import Foundation
 import UIKit
-
-@MainActor 
+ 
 class CacheManager {
-    static let shared = NSCache<NSString, UIImage>()
+    nonisolated(unsafe) static let shared = NSCache<NSString, UIImage>()
     
     func cacheImage(_ image: UIImage, forKey key: String) {
         CacheManager.shared.setObject(image, forKey: key as NSString)

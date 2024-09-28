@@ -139,20 +139,12 @@ struct SignUpView: View {
     @ViewBuilder
     var mainView: some View {
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Text(String(localized: "signUpView_title"))
-                    .font(.nunitoSans(size: 20))
-                Spacer()
-            }
-            .padding(.vertical)
-            .background(.appPrimary)
-            .clipped()
-            //
+            // Top Title
+            TopTitleView(title: String(localized: "signUpView_title"))
+                .clipped()
+            // Content
             ScrollView {
-                VStack(
-                    spacing: 30,
-                    content: {
+                VStack(spacing: 30) {
                         self.rowTextField(
                             placeholder: String(localized: "your_name"),
                             value: $vm.name,
@@ -206,7 +198,7 @@ struct SignUpView: View {
                             }
                         )
                         .loading(isLoading: vm.isLoadingPhoto, isOpaque: true)
-                })
+                }
                 .padding()
                 //Button
                 Button(String(localized: "sign_up")) {

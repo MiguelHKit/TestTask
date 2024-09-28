@@ -12,9 +12,8 @@ actor NetworkManager {
     private static let instance = NetworkManager()
     private let connectivityMonitor = NetworkMonitor.instance
     //GENERAL CONFIGURATION
-    static nonisolated let IS_PRODUCTION: Bool = false
+//    static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
-//    public var printLogs: Bool = false
     public nonisolated let printLogs: Bool = false
     private init() { }
     
@@ -73,7 +72,9 @@ actor NetworkManager {
             description: responseDescription
         )
     }
-    //
+    /// Make a request using a NetwortRequest and returning a Codable Model
+    /// - Parameter req: NetworkRequest
+    /// - Returns: Codable Model
     public static func request<T: Codable>(request req: NetworkRequest) async throws -> T {
         let response = try await NetworkManager.request(request: req)
         //Decoding
@@ -82,7 +83,7 @@ actor NetworkManager {
         guard let dataDecoded = try? jsonDecoder.decode(T.self, from: response.data) else { throw NetworkError.decodingError }
         return dataDecoded
     }
-    /// Function for upload a multipartRequest using form data in order to send files,
+    /// Upload a multipartRequest using form data in order to send files,
     /// the header for multipart/formadata is already setted, no need to added
     /// - Parameters:
     ///   - url: NetworkRequest.NetworkURL
@@ -112,7 +113,7 @@ actor NetworkManager {
     // Monitoring
     private nonisolated func stopMonitoring() {
         Task {
-            await self.connectivityMonitor.cancelMonitoring() // Cancelar el actor
+            await self.connectivityMonitor.cancelMonitoring() // cancel the actor
         }
     }
     
