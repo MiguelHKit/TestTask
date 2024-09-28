@@ -13,5 +13,14 @@
 		<string>NunitoSans_10pt-Medium.ttf</string>
 		<string>NunitoSans_10pt-SemiBold.ttf</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>appPrimary</string>
+		<key>UIImageName</key>
+		<string>appLogo</string>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
