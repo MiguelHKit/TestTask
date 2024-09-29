@@ -11,7 +11,7 @@ import Foundation
 class UsersViewModel: ObservableObject {
     @Published var data: [UserModel] = []
     @Published var isLoading: Bool = true
-    @Published var page: Int = 0
+    @Published var page: Int = 1
     @Published var pageSize: Int = 6
     @Published var hasMore: Bool = false
     var userServices: UserServices = .init()
@@ -25,16 +25,31 @@ class UsersViewModel: ObservableObject {
             self.isLoading = false
         }
     }
+    @Sendable
+    func onRefresableTask() async {
+        do {
+            self.isLoading = true
+            self.data = []
+            self.page = 1
+            self.hasMore = false
+            try await self.getUsers()
+            self.isLoading = false
+        } catch {
+            self.isLoading = false
+        }
+    }
     func getUsers() async throws {
         // call to network
         let response = try await self.userServices.getUsers(
-            page: self.page + 1,
+            page: self.page,
             count: self.pageSize
         )
         guard response.success == true //bcs of optional
         else { throw NetworkError.custom(message: response.message.unwrap()) }
         // Mapping
-        self.hasMore = response.links?.nextUrl != nil
+        let nextUrl = response.links?.nextUrl ?? ""
+        let totalPages = response.totalPages ?? 0
+        self.hasMore = nextUrl.isNotEmpty && self.page < totalPages
         let newUsers = response.users.compactMap { $0 }.map {
             UserModel(
                 id: $0.id ?? 0,

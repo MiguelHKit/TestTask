@@ -7,22 +7,34 @@
 
 import Foundation
 import Combine
+import Network
 
 @MainActor
 class MainViewModel: ObservableObject {
     @Published var isNotConected: Bool = false
-    private var monitoringTask: Task<Void, Never>?
     var cancellables: Set<AnyCancellable> = []
+    let monitor: NWPathMonitor
     init() {
-        NetworkMonitor.observable.$isConnected
-            .receive(on: RunLoop.main)
-            .map { !$0 } //convert isConected to isNotConected
-            .assign(to: \.isNotConected, on: self)
-            .store(in: &cancellables)
+        self.monitor = NWPathMonitor()
+        self.start(monitor: self.monitor)
     }
-    func retry() {
-        Task {
-            await NetworkMonitor.instance.retry()            
+    func start(monitor: NWPathMonitor) {
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "Monitor")
+        monitor.start(queue: queue)
+        monitor.pathUpdateHandler = { [weak self] path in
+            Task { @MainActor in
+                let conected = path.status == .satisfied
+                self?.isNotConected = !conected
+            }
         }
+    }
+    
+    func retry() {
+        self.monitor.cancel()
+        self.start(monitor: NWPathMonitor())
+    }
+    func cancelMonitoring() {
+        monitor.cancel()
     }
 }

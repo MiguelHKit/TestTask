@@ -9,11 +9,10 @@ import Foundation
 import Combine
 
 actor NetworkManager {
-    private static let instance = NetworkManager()
     //GENERAL CONFIGURATION
 //    static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
-    public nonisolated let printLogs: Bool = false
+    static nonisolated let printLogs: Bool = true
     private init() { }
     
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
@@ -51,7 +50,7 @@ actor NetworkManager {
             throw NetworkError.invalidResponse
         }
         //Printing Values
-        if Self.instance.printLogs {
+        if Self.printLogs {
             log("🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️[NEW SERVICE CALL]🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️🛰️")
             let responseDescription = """
                 ⚔️[Method]: \(request.httpMethod ?? "UNKNOWN")
@@ -108,12 +107,4 @@ actor NetworkManager {
             )
         )
     }
-    // Monitoring
-    private nonisolated func stopMonitoring() {
-        Task {
-            await NetworkMonitor.instance.cancelMonitoring() // cancel the actor
-        }
-    }
-    
-    deinit { stopMonitoring() }
 }

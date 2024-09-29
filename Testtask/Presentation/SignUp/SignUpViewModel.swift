@@ -114,6 +114,7 @@ class SignUpViewModel: ObservableObject {
         self.isLoading = false
         self.isLoadingPositions = true
         self.isLoadingPhoto = false
+        self.cancellables = []
         Task { await self.getPositions() }
     }
     // MARK: - Services

@@ -19,8 +19,8 @@ struct UserCodable: Codable {
 
 struct GetUsersResponse: Codable {
     let success: Bool?
-    let total_pages: Int?
-    let total_users: Int?
+    let totalPages: Int?
+    let totalUsers: Int?
     let count: Int?
     let page: Int?
     let links: Self.Links?

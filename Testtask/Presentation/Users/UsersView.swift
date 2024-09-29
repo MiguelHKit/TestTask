@@ -19,8 +19,8 @@ struct UsersView: View {
             self.listView
         }
         .task(vm.onAppearTask)
-        .refreshable(action: vm.onAppearTask)
-        .loading(isLoading: vm.isLoading, isOpaque: false)
+        .refreshable(action: vm.onRefresableTask)
+        .loading(isLoading: vm.isLoading, isOpaque: true)
     }
     // MARK: ListView
     @ViewBuilder
