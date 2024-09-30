@@ -17,10 +17,34 @@ struct UsersView: View {
             TopTitleView(title: String(localized: "UsersView_title"))
             // List of users
             self.listView
+                .loading(isLoading: $vm.isLoading, isOpaque: false)
         }
         .task(vm.onAppearTask)
         .refreshable(action: vm.onRefresableTask)
-        .loading(isLoading: vm.isLoading, isOpaque: true)
+        .fullScreenCover(
+            item: $vm.serverErrorMessage,
+            content: { errorServer in
+                AdviceView(
+                    image: .serverError,
+                    title: errorServer.message,
+                    button: .init(
+                        buttonTitle: String(
+                            localized: "try_again"),
+                    action: {
+                        vm.serverErrorMessage = nil
+                    }
+                )
+            )
+            .overlay(alignment: .topTrailing) {
+                Button("", systemImage: "xmark") {
+                    vm.serverErrorMessage = nil
+                }
+                .foregroundStyle(.foreground)
+                .opacity(0.8)
+                .font(.title)
+                .padding(.trailing)
+            }
+        })
     }
     // MARK: ListView
     @ViewBuilder
@@ -32,7 +56,7 @@ struct UsersView: View {
                 button: nil
             )
         } else {
-            List(vm.data, id: \.self) { item in
+            List(vm.data, id: \.id) { item in
                 // Row for display each user
                 self.rowView(item: item)
                     .listRowSeparator(.hidden, edges: .top)

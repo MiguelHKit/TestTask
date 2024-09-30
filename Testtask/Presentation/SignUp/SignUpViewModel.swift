@@ -8,32 +8,31 @@
 import Foundation
 import Combine
 
-@MainActor
-class SignUpViewModel: ObservableObject {
+final class SignUpViewModel: ObservableObject, @unchecked Sendable {
     // Name Field
-    @Published var name: String = ""
+    @MainActor @Published var name: String = ""
     @Published var nameErrorMsj: String? = nil
     // Email Field
-    @Published var email: String = ""
+    @MainActor @Published var email: String = ""
     @Published var emailErrorMsj: String? = nil
     // Phone field
     @Published var phone: String = ""
     @Published var phoneErrorMsj: String? = nil
     // Position selection
     @Published var positionSelection: Int? = nil
-    @Published var positionOptions: [Int:String] = [:]
+    @MainActor @Published var positionOptions: [Int:String] = [:]
     // Photo field
     @Published var photo: ImageData? = nil
     @Published var photoNameErrorMsj: String? = nil
     //
     @Published var sendButtonDisabled: Bool = false
-    @Published var showSuccessSignedUpModal: Bool = false
-    @Published var serverErrorMessage: ErrorMessageItem? = nil
+    @MainActor @Published var showSuccessSignedUpModal: Bool = false
+    @MainActor @Published var serverErrorMessage: ErrorMessageItem? = nil
     // Loading var
-    @Published var isLoading: Bool = false
-    @Published var isLoadingPositions: Bool = true
-    @Published var isLoadingPhoto: Bool = false
-    private var services: UserServices = .init()
+    @MainActor @Published var isLoading: Bool = false
+    @MainActor @Published var isLoadingPositions: Bool = true
+    @MainActor @Published var isLoadingPhoto: Bool = false
+    private let services: UserServices = .init()
     private var cancellables = Set<AnyCancellable>()
     // MARK: - Init
     init() {
@@ -42,7 +41,7 @@ class SignUpViewModel: ObservableObject {
             .receive(on: DispatchQueue.global(qos: .userInteractive))
             .drop(while: { $0.isEmpty })
             .map { self.validateName($0) }
-            .receive(on: DispatchQueue.main)
+            .receive(on: RunLoop.main)
             .assign(to: \.nameErrorMsj, on: self)
             .store(in: &cancellables)
         self.$email
@@ -56,7 +55,7 @@ class SignUpViewModel: ObservableObject {
             .receive(on: DispatchQueue.global(qos: .userInteractive))
             .drop(while: { $0.isEmpty })
             .map { self.validatePhone($0) }
-            .receive(on: DispatchQueue.main)
+            .receive(on: RunLoop.main)
             .assign(to: \.phoneErrorMsj, on: self)
             .store(in: &cancellables)
         self.$photo
@@ -69,7 +68,7 @@ class SignUpViewModel: ObservableObject {
                 else { return "Photo is required" }
                 return nil
             }
-            .receive(on: DispatchQueue.main)
+            .receive(on: RunLoop.main)
             .assign(to: \.photoNameErrorMsj, on: self)
             .store(in: &cancellables)
         // Cndition for enabling submit button
@@ -90,30 +89,34 @@ class SignUpViewModel: ObservableObject {
     func validatePhone(_ name: String) -> String? {
         return phone.isEmpty ? "Required field" : nil
     }
-    func validateUser() {
+    func validateUser() async {
         // Trigger again validation listeners
-        self.name = self.name
-        self.email = self.email
-        self.phone = self.phone
-        self.positionSelection = self.positionSelection
-        self.photo = self.photo
+        await MainActor.run {
+            self.name = self.name
+            self.email = self.email
+            self.phone = self.phone
+            self.positionSelection = self.positionSelection
+            self.photo = self.photo
+        }
     }
     func resetView() {
-        self.name = ""
-        self.nameErrorMsj = nil
-        self.email = ""
-        self.emailErrorMsj = nil
-        self.phone = ""
-        self.phoneErrorMsj = nil
-        self.positionSelection = nil
-        self.photo = nil
-        self.photoNameErrorMsj = nil
-        self.sendButtonDisabled = false
-        self.showSuccessSignedUpModal = false
-        self.serverErrorMessage = nil
-        self.isLoading = false
-        self.isLoadingPositions = true
-        self.isLoadingPhoto = false
+        Task { @MainActor in
+            self.name = ""
+            self.nameErrorMsj = nil
+            self.email = ""
+            self.emailErrorMsj = nil
+            self.phone = ""
+            self.phoneErrorMsj = nil
+            self.positionSelection = nil
+            self.photo = nil
+            self.photoNameErrorMsj = nil
+            self.sendButtonDisabled = false
+            self.showSuccessSignedUpModal = false
+            self.serverErrorMessage = nil
+            self.isLoading = false
+            self.isLoadingPositions = true
+            self.isLoadingPhoto = false
+        }
         self.cancellables = []
         Task { await self.getPositions() }
     }
@@ -125,7 +128,7 @@ class SignUpViewModel: ObservableObject {
             guard response.success == true
             else { throw NetworkError.custom(message: response.message.unwrap()) }
             // success, array to dictionary
-            self.positionOptions = Dictionary(
+            var positionOptionsDict: [Int: String] = Dictionary(
                 uniqueKeysWithValues: response.positions
                     .compactMap {
                         guard
@@ -136,21 +139,33 @@ class SignUpViewModel: ObservableObject {
                     }
                     .sorted(by: { $0.1 > $1.1 })
             )
-            self.isLoadingPositions = false
+            await MainActor.run {
+                self.positionOptions = positionOptionsDict
+                self.isLoadingPositions = false
+            }
         } catch {
-            self.isLoadingPositions = false
+            await MainActor.run {
+                self.isLoadingPositions = false
+            }
         }
     }
     @Sendable
     func submit() async {
-        self.isLoading = true
-        self.validateUser()
+        await MainActor.run {
+            self.isLoading = true
+        }
+        await self.validateUser()
         guard
             nameErrorMsj == nil,
             emailErrorMsj == nil,
             phoneErrorMsj == nil,
             photoNameErrorMsj == nil
-        else { self.isLoading = false; return }
+        else {
+            await MainActor.run {
+                self.isLoading = false;
+            }
+            return
+        }
         do {
             // ask for token
             guard let positionSelection, let photo else { throw NetworkError.localRequestError }
@@ -170,20 +185,28 @@ class SignUpViewModel: ObservableObject {
             )
             // submit Info
             guard registrationResponse.success == true else {
-                self.nameErrorMsj = registrationResponse.fails?.name?.mapToErrorMsj()
-                self.emailErrorMsj = registrationResponse.fails?.email?.mapToErrorMsj()
-                self.phoneErrorMsj = registrationResponse.fails?.phone?.mapToErrorMsj()
-                self.photoNameErrorMsj = registrationResponse.fails?.photo?.mapToErrorMsj()
+                await MainActor.run {
+                    self.nameErrorMsj = registrationResponse.fails?.name?.mapToErrorMsj()
+                    self.emailErrorMsj = registrationResponse.fails?.email?.mapToErrorMsj()
+                    self.phoneErrorMsj = registrationResponse.fails?.phone?.mapToErrorMsj()
+                    self.photoNameErrorMsj = registrationResponse.fails?.photo?.mapToErrorMsj()
+                }
                 throw NetworkError.custom(message: registrationResponse.message.unwrap())
             }
             // success
-            self.isLoading = false
-            self.showSuccessSignedUpModal = true
+            await MainActor.run {
+                self.isLoading = false
+                self.showSuccessSignedUpModal = true
+            }
         } catch NetworkError.custom(let message) {
-            self.serverErrorMessage = .init(message: message)
-            self.isLoading = false
+            await MainActor.run {
+                self.serverErrorMessage = .init(message: message)
+                self.isLoading = false
+            }
         } catch {
-            self.isLoading = false
+            await MainActor.run {
+                self.isLoading = false
+            }
         }
     }
 }

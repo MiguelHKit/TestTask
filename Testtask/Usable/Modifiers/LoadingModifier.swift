@@ -25,21 +25,21 @@ struct LoadingView: View {
 }
 
 struct LoadingModifier: ViewModifier {
-    var isLoading: Bool
+    @Binding var isLoading: Bool
     var isOpaque: Bool
 
     func body(content: Content) -> some View {
         ZStack {
             content
             if isLoading {
-                LoadingView(isOpaque: true)
+                LoadingView(isOpaque: isOpaque)
             }
         }
     }
 }
 
 extension View {
-    func loading(isLoading: Bool, isOpaque: Bool = true) -> some View {
+    func loading(isLoading: Binding<Bool>, isOpaque: Bool = true) -> some View {
         self.modifier(LoadingModifier(isLoading: isLoading, isOpaque: isOpaque))
     }
 }

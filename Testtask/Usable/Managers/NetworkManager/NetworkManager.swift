@@ -12,7 +12,7 @@ actor NetworkManager {
     //GENERAL CONFIGURATION
 //    static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
-    static nonisolated let printLogs: Bool = true
+    static nonisolated let printLogs: Bool = false
     private init() { }
     
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {

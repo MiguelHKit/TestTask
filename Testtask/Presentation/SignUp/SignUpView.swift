@@ -58,7 +58,7 @@ struct SignUpView: View {
         self.mainView
         .task(vm.getPositions)
         .animation(.easeIn, value: vm.isLoadingPositions)
-        .loading(isLoading: vm.isLoading)
+        .loading(isLoading: $vm.isLoading)
         .hideKeyboardOnTap()
         .confirmationDialog(String(localized: "dialog_photo_message", defaultValue: "Choose how you want to add a photo"), isPresented: $showPhotoConfirmationDialog, titleVisibility: .visible, actions: {
             Button(String(localized: "camera")) {
@@ -220,7 +220,7 @@ struct SignUpView: View {
                                 vm.photo = nil
                             }
                         )
-                        .loading(isLoading: vm.isLoadingPhoto, isOpaque: true)
+                        .loading(isLoading: $vm.isLoadingPhoto, isOpaque: true)
                 }
                 .padding()
                 //Button

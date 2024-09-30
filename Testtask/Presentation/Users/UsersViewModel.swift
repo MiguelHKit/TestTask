@@ -7,35 +7,59 @@
 
 import Foundation
 
-@MainActor
-class UsersViewModel: ObservableObject {
-    @Published var data: [UserModel] = []
-    @Published var isLoading: Bool = true
-    @Published var page: Int = 1
-    @Published var pageSize: Int = 6
-    @Published var hasMore: Bool = false
+final class UsersViewModel: ObservableObject, @unchecked Sendable {
+    @MainActor @Published
+    var data: [UserModel] = []
+    @MainActor @Published
+    var isLoading: Bool = true
+    @MainActor @Published
+    var serverErrorMessage: ErrorMessageItem? = nil
+    @MainActor @Published
+    var hasMore: Bool = false
+    var page: Int = 1
+    var pageSize: Int = 6
     var userServices: UserServices = .init()
     
     @Sendable
     func onAppearTask() async {
         do {
             try await self.getUsers()
-            self.isLoading = false
+            await MainActor.run {
+                self.isLoading = false
+            }
+        } catch NetworkError.custom(let message) {
+            await MainActor.run {
+                self.serverErrorMessage = .init(message: message)
+                self.isLoading = false
+            }
         } catch {
-            self.isLoading = false
+            await MainActor.run {
+                self.isLoading = false
+            }
         }
     }
     @Sendable
     func onRefresableTask() async {
         do {
-            self.isLoading = true
-            self.data = []
-            self.page = 1
-            self.hasMore = false
+            await MainActor.run {
+                self.isLoading = true
+                self.data = []
+                self.hasMore = false
+                self.page = 1
+            }
             try await self.getUsers()
-            self.isLoading = false
+            await MainActor.run {
+                self.isLoading = false
+            }
+        } catch NetworkError.custom(let message) {
+            await MainActor.run {
+                self.serverErrorMessage = .init(message: message)
+                self.isLoading = false
+            }
         } catch {
-            self.isLoading = false
+            await MainActor.run {
+                self.isLoading = false
+            }
         }
     }
     func getUsers() async throws {
@@ -49,7 +73,7 @@ class UsersViewModel: ObservableObject {
         // Mapping
         let nextUrl = response.links?.nextUrl ?? ""
         let totalPages = response.totalPages ?? 0
-        self.hasMore = nextUrl.isNotEmpty && self.page < totalPages
+        let hasMore = nextUrl.isNotEmpty && self.page < totalPages
         let newUsers = response.users.compactMap { $0 }.map {
             UserModel(
                 id: $0.id ?? 0,
@@ -61,7 +85,10 @@ class UsersViewModel: ObservableObject {
             )
         }
         //
-        self.data += newUsers
-        self.page += 1
+        await MainActor.run {
+            self.data += newUsers
+            self.page += 1
+            self.hasMore = hasMore
+        }
     }
 }
