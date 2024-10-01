@@ -6,13 +6,11 @@
 //
 
 import Foundation
-import Combine
 import Network
 
-@MainActor
-class MainViewModel: ObservableObject {
-    @Published var isNotConected: Bool = false
-    var cancellables: Set<AnyCancellable> = []
+final class MainViewModel: ObservableObject, @unchecked Sendable {
+    @MainActor @Published var isNotConected: Bool = false
+    @MainActor @Published var serverErrorMessage: ErrorMessageItem? = nil
     let monitor: NWPathMonitor
     init() {
         self.monitor = NWPathMonitor()
@@ -25,11 +23,14 @@ class MainViewModel: ObservableObject {
         monitor.pathUpdateHandler = { [weak self] path in
             Task { @MainActor in
                 let conected = path.status == .satisfied
-                self?.isNotConected = !conected
+                self?.updateIsNotConected(!conected)
             }
         }
     }
-    
+    @MainActor
+    func updateIsNotConected(_ isNotConected: Bool) {
+        self.isNotConected = isNotConected
+    }
     func retry() {
         self.monitor.cancel()
         self.start(monitor: NWPathMonitor())

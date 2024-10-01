@@ -60,6 +60,7 @@ struct SignUpView: View {
         .animation(.easeIn, value: vm.isLoadingPositions)
         .loading(isLoading: $vm.isLoading)
         .hideKeyboardOnTap()
+        .serverErrorMessage(errorMessage: $vm.serverErrorMessage)
         .confirmationDialog(String(localized: "dialog_photo_message", defaultValue: "Choose how you want to add a photo"), isPresented: $showPhotoConfirmationDialog, titleVisibility: .visible, actions: {
             Button(String(localized: "camera")) {
                 self.openCamera = true
@@ -132,6 +133,7 @@ struct SignUpView: View {
                 .foregroundStyle(.foreground)
                 .opacity(0.8)
                 .font(.title)
+                .padding(.top)
                 .padding(.trailing)
             }
         })
@@ -168,8 +170,8 @@ struct SignUpView: View {
             TopTitleView(title: String(localized: "signUpView_title"))
                 .clipped()
             // Content
-            ScrollView {
-                VStack(spacing: 30) {
+                ScrollView {
+                    VStack(spacing: 30) {
                         self.rowTextField(
                             placeholder: String(localized: "your_name"),
                             value: $vm.name,
@@ -221,16 +223,16 @@ struct SignUpView: View {
                             }
                         )
                         .loading(isLoading: $vm.isLoadingPhoto, isOpaque: true)
+                    }
+                    .padding()
+                    //Button
+                    Button(String(localized: "sign_up")) {
+                        Task(operation: vm.submit)
+                    }
+                    .padding(.bottom)
+                    .buttonStyle(.appPrimaryFilledButtonStyle)
+                    .disabledWhen($vm.sendButtonDisabled)
                 }
-                .padding()
-                //Button
-                Button(String(localized: "sign_up")) {
-                    Task(operation: vm.submit)
-                }
-                .padding(.bottom)
-                .buttonStyle(.appPrimaryFilledButtonStyle)
-                .disabledWhen($vm.sendButtonDisabled)
-            }
         }
     }
     // MARK: rowTextField

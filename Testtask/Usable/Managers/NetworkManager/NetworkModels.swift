@@ -27,6 +27,7 @@ enum NetworkError: Error {
 struct ErrorMessageItem: Identifiable {
     let id = UUID()
     let message: String
+    let tryAgainAction: (() -> Void)? = nil
 }
 
 public typealias Parameters = [String: Any]

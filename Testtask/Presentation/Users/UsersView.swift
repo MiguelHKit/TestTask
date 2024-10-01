@@ -19,71 +19,49 @@ struct UsersView: View {
             self.listView
                 .loading(isLoading: $vm.isLoading, isOpaque: false)
         }
-        .task(vm.onAppearTask)
+        .task(vm.loadUsers)
         .refreshable(action: vm.onRefresableTask)
-        .fullScreenCover(
-            item: $vm.serverErrorMessage,
-            content: { errorServer in
-                AdviceView(
-                    image: .serverError,
-                    title: errorServer.message,
-                    button: .init(
-                        buttonTitle: String(
-                            localized: "try_again"),
-                    action: {
-                        vm.serverErrorMessage = nil
-                    }
-                )
-            )
-            .overlay(alignment: .topTrailing) {
-                Button("", systemImage: "xmark") {
-                    vm.serverErrorMessage = nil
-                }
-                .foregroundStyle(.foreground)
-                .opacity(0.8)
-                .font(.title)
-                .padding(.trailing)
-            }
-        })
+        .serverErrorMessage(errorMessage: $vm.serverErrorMessage)
     }
     // MARK: ListView
     @ViewBuilder
     var listView: some View {
-        if vm.data.isEmpty && !vm.isLoading {
-            AdviceView(
-                image: .noUsers,
-                title: String(localized:"no_users_message"),
-                button: nil
-            )
-        } else {
-            List(vm.data, id: \.id) { item in
-                // Row for display each user
-                self.rowView(item: item)
-                    .listRowSeparator(.hidden, edges: .top)
-                    .listRowSeparator(vm.data.last == item ? .hidden : .visible)
-                // ProgressView for loading pagination
-                if vm.data.last == item && vm.hasMore {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                            .id(self.progressViewId)
-                            .progressViewStyle(.circular)
-                            .tint(.primary)
-                            .scaleEffect(1.5)
-                            .onAppear { progressViewId += 1 }
-                        Spacer()
-                    }
-                    .offset(y: -10)
-                    .padding(.bottom, 20)
-                    .listRowSeparator(.hidden)
-                    .task {
-                        // Load more when progresView appears
-                        try? await Task.sleep(for: .seconds(1))
-                        await vm.onAppearTask()
+        ZStack {
+            if vm.data.isEmpty && !vm.isLoading && !vm.isRefreshing {
+                AdviceView(
+                    image: .noUsers,
+                    title: String(localized:"no_users_message"),
+                    button: nil
+                )
+            }
+                List(vm.data, id: \.id) { item in
+                    // Row for display each user
+                    self.rowView(item: item)
+                        .listRowSeparator(.hidden, edges: .top)
+                        .listRowSeparator(vm.data.last == item ? .hidden : .visible)
+                    // ProgressView for loading pagination
+                    if vm.data.last == item && vm.hasMore {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                                .id(self.progressViewId)
+                                .progressViewStyle(.circular)
+                                .tint(.primary)
+                                .scaleEffect(1.5)
+                                .onAppear { progressViewId += 1 }
+                            Spacer()
+                        }
+                        .offset(y: -10)
+                        .padding(.bottom, 20)
+                        .listRowSeparator(.hidden)
+                        .task {
+                            // Load more when progresView appears
+                            try? await Task.sleep(for: .seconds(1))
+                            await vm.loadUsers()
+                        }
                     }
                 }
-            }
-            .listStyle(.plain)
+                .listStyle(.plain)
         }
     }
     // MARK: placeholderImage

@@ -20,7 +20,7 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
     @Published var phoneErrorMsj: String? = nil
     // Position selection
     @Published var positionSelection: Int? = nil
-    @MainActor @Published var positionOptions: [Int:String] = [:]
+    @MainActor @Published var positionOptions: [Dictionary<Int, String>.Element] = .init()
     // Photo field
     @Published var photo: ImageData? = nil
     @Published var photoNameErrorMsj: String? = nil
@@ -61,17 +61,11 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
         self.$photo
             .receive(on: DispatchQueue.global(qos: .userInitiated))
             .drop(while: { $0 == nil })
-            .map {
-                guard
-                    let image = $0?.uiImage,
-                    image.jpegData(compressionQuality: 1) != nil
-                else { return "Photo is required" }
-                return nil
-            }
+            .map { self.validatePhoto($0) }
             .receive(on: RunLoop.main)
             .assign(to: \.photoNameErrorMsj, on: self)
             .store(in: &cancellables)
-        // Cndition for enabling submit button
+        // Condition for enabling submit button
         self.$positionSelection.sink { [weak self] in
             self?.sendButtonDisabled = $0 == nil
         }
@@ -89,14 +83,20 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
     func validatePhone(_ name: String) -> String? {
         return phone.isEmpty ? "Required field" : nil
     }
+    func validatePhoto(_ imageData: ImageData?) -> String? {
+        guard
+            let image = imageData?.uiImage,
+            image.jpegData(compressionQuality: 1) != nil
+        else { return "Photo is required" }
+        return nil
+    }
     func validateUser() async {
         // Trigger again validation listeners
         await MainActor.run {
-            self.name = self.name
-            self.email = self.email
-            self.phone = self.phone
-            self.positionSelection = self.positionSelection
-            self.photo = self.photo
+            nameErrorMsj = validateName(self.name)
+            emailErrorMsj = validateEmail(self.email)
+            phoneErrorMsj = validatePhone(self.phone)
+            photoNameErrorMsj = validatePhoto(self.photo)
         }
     }
     func resetView() {
@@ -128,7 +128,7 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
             guard response.success == true
             else { throw NetworkError.custom(message: response.message.unwrap()) }
             // success, array to dictionary
-            var positionOptionsDict: [Int: String] = Dictionary(
+            let positionOptionsDict: [Dictionary<Int,String>.Element] = Dictionary(
                 uniqueKeysWithValues: response.positions
                     .compactMap {
                         guard
@@ -138,7 +138,8 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
                         return (id, name)
                     }
                     .sorted(by: { $0.1 > $1.1 })
-            )
+            ).sorted(by: { $0.key < $1.key })
+            await print(positionOptions)
             await MainActor.run {
                 self.positionOptions = positionOptionsDict
                 self.isLoadingPositions = false
@@ -162,7 +163,7 @@ final class SignUpViewModel: ObservableObject, @unchecked Sendable {
             photoNameErrorMsj == nil
         else {
             await MainActor.run {
-                self.isLoading = false;
+                self.isLoading = false
             }
             return
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserModel: Hashable {
+struct UserModel: Hashable, Sendable {
     let id: Int
     let name: String
     let role: String

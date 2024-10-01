@@ -25,7 +25,7 @@ fileprivate struct RadioButton: View {
 fileprivate struct RadioSelectionView: View {
     @Binding var selectedId: Int?
     @Binding var selectedItems: [String]
-    var items: [(key: Int, value: String)]
+    var items: [Dictionary<Int,String>.Element]
     var titleLabel: String
     var allowMultiselection: Bool
     var tint: Color
@@ -59,7 +59,7 @@ fileprivate struct RadioSelectionView: View {
 
 struct RadioSingleSelectionView: View {
     @Binding var selectedId: Int?
-    var items: [Int:String]
+    var items: [Dictionary<Int,String>.Element]
     var titleLabel: String
     var tint: Color = .appSecondary
     
@@ -67,7 +67,7 @@ struct RadioSingleSelectionView: View {
         RadioSelectionView(
             selectedId: $selectedId,
             selectedItems: .constant([]),
-            items: items.map { ($0.key, $0.value) },
+            items: items,
             titleLabel: titleLabel,
             allowMultiselection: false,
             tint: tint
@@ -96,10 +96,10 @@ struct RadioSingleSelectionView: View {
 fileprivate struct PreviewView: View {
     @State var selectedOption: Int? = nil
     @State var selectedOptions: [Int:String] = [:]
-    var items: [Int:String] = [
-        0:"item 1",
-        1:"item 2",
-        2:"item 3",
+    var items: [Dictionary<Int,String>.Element] = [
+        (key: 0,value: "item 1"),
+        (key: 1,value: "item 2"),
+        (key: 2,value: "item 3")
     ]
     
     var body: some View {

@@ -33,6 +33,7 @@
 		84AB9C762C911A1D00CDE749 /* TesttaskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AB9C752C911A1D00CDE749 /* TesttaskApp.swift */; };
 		84AB9C7A2C911A1E00CDE749 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84AB9C792C911A1E00CDE749 /* Assets.xcassets */; };
 		84AB9C7E2C911A1E00CDE749 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84AB9C7D2C911A1E00CDE749 /* Preview Assets.xcassets */; };
+		84B4BEE02CAB54C7001EDA36 /* ServerErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B4BEDF2CAB54C7001EDA36 /* ServerErrorMessage.swift */; };
 		84FFB5562C93F39B0003CB01 /* UsersService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FFB5552C93F39B0003CB01 /* UsersService.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		84AB9C792C911A1E00CDE749 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84AB9C7B2C911A1E00CDE749 /* Testtask.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Testtask.entitlements; sourceTree = "<group>"; };
 		84AB9C7D2C911A1E00CDE749 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		84B4BEDF2CAB54C7001EDA36 /* ServerErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMessage.swift; sourceTree = "<group>"; };
 		84FFB5552C93F39B0003CB01 /* UsersService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -224,6 +226,7 @@
 				846CA0F12C98025600692144 /* LoadingModifier.swift */,
 				842518092C98B976002B6CA4 /* HideKeyboardModifier.swift */,
 				8425180D2C98C9A4002B6CA4 /* DisableWhenModifier.swift */,
+				84B4BEDF2CAB54C7001EDA36 /* ServerErrorMessage.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				8445BC052C94A4C00079E4AC /* String.swift in Sources */,
 				84AB9C762C911A1D00CDE749 /* TesttaskApp.swift in Sources */,
 				846CA0EC2C978B4500692144 /* Int.swift in Sources */,
+				84B4BEE02CAB54C7001EDA36 /* ServerErrorMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,15 +13,17 @@ final class UsersViewModel: ObservableObject, @unchecked Sendable {
     @MainActor @Published
     var isLoading: Bool = true
     @MainActor @Published
+    var isRefreshing: Bool = false
+    @MainActor @Published
     var serverErrorMessage: ErrorMessageItem? = nil
     @MainActor @Published
     var hasMore: Bool = false
+    //
     var page: Int = 1
     var pageSize: Int = 6
     var userServices: UserServices = .init()
-    
-    @Sendable
-    func onAppearTask() async {
+    //
+    func loadUsers() async {
         do {
             try await self.getUsers()
             await MainActor.run {
@@ -38,27 +40,26 @@ final class UsersViewModel: ObservableObject, @unchecked Sendable {
             }
         }
     }
-    @Sendable
     func onRefresableTask() async {
         do {
             await MainActor.run {
-                self.isLoading = true
+                self.isRefreshing = true
                 self.data = []
                 self.hasMore = false
                 self.page = 1
             }
             try await self.getUsers()
             await MainActor.run {
-                self.isLoading = false
+                self.isRefreshing = false
             }
         } catch NetworkError.custom(let message) {
             await MainActor.run {
                 self.serverErrorMessage = .init(message: message)
-                self.isLoading = false
+                self.isRefreshing = false
             }
         } catch {
             await MainActor.run {
-                self.isLoading = false
+                self.isRefreshing = false
             }
         }
     }
