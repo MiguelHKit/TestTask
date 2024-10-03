@@ -10,20 +10,15 @@ import Network
 
 final class MainViewModel: ObservableObject, @unchecked Sendable {
     @MainActor @Published var isNotConected: Bool = false
-    @MainActor @Published var serverErrorMessage: ErrorMessageItem? = nil
-    let monitor: NWPathMonitor
+    var monitor: NWPathMonitor = NWPathMonitor()
     init() {
-        self.monitor = NWPathMonitor()
-        self.start(monitor: self.monitor)
+        Task { await self.start() }
     }
-    func start(monitor: NWPathMonitor) {
-        let monitor = NWPathMonitor()
-        let queue = DispatchQueue(label: "Monitor")
-        monitor.start(queue: queue)
-        monitor.pathUpdateHandler = { [weak self] path in
-            Task { @MainActor in
-                let conected = path.status == .satisfied
-                self?.updateIsNotConected(!conected)
+    func start() async {
+        for await update in self.monitor {
+            let conected = update.status == .satisfied
+            await MainActor.run {
+                self.updateIsNotConected(!conected)
             }
         }
     }
@@ -33,9 +28,12 @@ final class MainViewModel: ObservableObject, @unchecked Sendable {
     }
     func retry() {
         self.monitor.cancel()
-        self.start(monitor: NWPathMonitor())
+        self.monitor = NWPathMonitor()
     }
     func cancelMonitoring() {
+        monitor.cancel()
+    }
+    deinit {
         monitor.cancel()
     }
 }
